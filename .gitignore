@@ -1,0 +1,9 @@
+Doxygen/html/
+*.apk
+.svn/
+[Pp]rof/
+[Pp]rofs/
+Livraisons/
+Build/
+Build_PC/
+NotGit/
