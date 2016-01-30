@@ -22,6 +22,6 @@ public class MoveLaser : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		other.GetComponent
+		other.GetComponent<Player> ().DetectBullet ();
 	}
 }

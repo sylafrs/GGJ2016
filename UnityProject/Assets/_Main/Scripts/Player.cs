@@ -119,6 +119,10 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public void DetectBullet()
+	{
+	}
+
 	private void OnZoneWon(Zone zone)
 	{
 		LastOwnedZone = zone;
