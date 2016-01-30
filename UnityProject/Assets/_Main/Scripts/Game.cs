@@ -26,6 +26,11 @@ public class Game : MonoBehaviour {
 		actualDuractionGame = Settings.DurationGame;
 	}
 
+	string gui_remainingTime = "";
+	void OnGUI(){
+		GUILayout.Label ("Remaining time = " + gui_remainingTime);
+	}
+
 	void Start()
 	{
 		if(SceneManager.GetActiveScene().buildIndex == 1)
@@ -61,6 +66,7 @@ public class Game : MonoBehaviour {
 
 			DateTime now = DateTime.Now;
 			actualDuractionGame = (float)(now - start).TotalSeconds;
+			gui_remainingTime = (Settings.DurationGame - actualDuractionGame).ToString("F2");
 
 			foreach (Zone z in Zones)
 				z.GameUpdate ();
@@ -72,38 +78,60 @@ public class Game : MonoBehaviour {
 		EndGame ();
 	}
 
-	private void InitGame()
+	private void InitZoneEffects()
 	{
-		int i;
-
-		//Players = GameObject.FindObjectsOfType<Player>();
-		Zones = new List<Zone> (GameObject.FindObjectsOfType<Zone> ());
-
 		Assert.Check (Settings.Effects.Length != 0, "No effect setted");
 
 		List<Zone> zonesToSet = new List<Zone> (this.Zones);
-		for (i = 1; i < Settings.Effects.Length && zonesToSet.Count > 0; i++) {
+		for (int i = 1; i < Settings.Effects.Length && zonesToSet.Count > 0; i++)
+		{
 			int nZones = Random.Range (0, zonesToSet.Count);
 			zonesToSet [nZones].Effect = Settings.Effects [i];
 			zonesToSet.Remove (zonesToSet [nZones]);
 		}
 
-		foreach (Zone z in zonesToSet)
+		foreach (Zone z in zonesToSet) 
+		{
 			z.Effect = Settings.Effects [0];
+		}
+	}
 
-		foreach (Zone z in Zones) {
-			for (i = 0; i < z.Effect.NeededLetters; i++)
+	private void InitZoneCombinaisons()
+	{
+		foreach (Zone z in Zones) 
+		{
+			for (int i = 0; i < z.Effect.NeededLetters; i++)
 				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
 
 			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
 		}
+	}
 
-		i = 0;
-		foreach (Player p in Players) {
+	private void InitPlayers()
+	{
+		int i = 0;
+		List<Zone> availableZones = new List<Zone> (Zones);
+		foreach (Player p in Players) 
+		{
 			p.color = Settings.PlayerColors [i];
 			p.rigidbody.isKinematic = false;
+
+			Zone z = availableZones[Random.Range (0, availableZones.Count)];
+			availableZones.Remove (z);
+
+			p.transform.position = z.transform.position;
 			i++;
 		}
+	}
+
+	private void InitGame()
+	{
+		//Players = GameObject.FindObjectsOfType<Player>();
+		Zones = new List<Zone> (GameObject.FindObjectsOfType<Zone> ());
+
+		this.InitZoneEffects ();
+		this.InitZoneCombinaisons ();
+		this.InitPlayers ();
 	}
 
 	private void EndGame()

@@ -12,30 +12,27 @@ public class Player : MonoBehaviour
 
 	//vitesse de la boule float
 
-	public Color color;
-	public float speed;
+	public Color 			color;
+	public float 			speed;
+	public float 			multiplicatorSpeedBullet = 1;
+	public int 				nbrRoundWin = 0;
+	public GameObject 		Bullet;
+	public bool 			rightBullet = true;
+	public bool 			isGrounded;
 
-	public float multiplicatorSpeedBullet = 1;
+	public XboxController 	controller;
 
-	public GameObject Bullet;
+	public LayerMask 		LayerMask;
 
-	public bool rightBullet = true;
-	public bool isGrounded;
+	private Quaternion 		targetRotation;
 
-	public XboxController controller;
+	public new Rigidbody 	rigidbody 		{ get; private set; }
 
-	public LayerMask LayerMask;
 
-	private Quaternion targetRotation;
-
-	public new Rigidbody rigidbody { get; private set; }
-
-	public int nbrRoundWin = 0;
-
-	public Zone LastOwnedZone { get; private set; }
-	public List<Zone> OwnedZones { get; private set; }
-	public List<ZoneEffect> ActiveEffects { get; private set; }
-	public Zone Position { get; private set; }
+	public Zone 			LastOwnedZone 	{ get; private set; }
+	public List<Zone> 		OwnedZones 		{ get; private set; }
+	public List<ZoneEffect> ActiveEffects 	{ get; private set; }
+	public Zone 			Position 		{ get; private set; }
 
 	private void Awake()
 	{
@@ -88,7 +85,6 @@ public class Player : MonoBehaviour
 		rightBullet = true;
 	}
 
-	#warning TODO : UpdatePlayer
 	private void UpdatePlayer(PlayerInput input) 
 	{
 		GameObject bulletReference = null;
