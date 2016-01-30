@@ -44,74 +44,14 @@ public class Game : MonoBehaviour {
 		Assert.Check (listPlayer.Count >= 2, "Not enough players (" + listPlayer.Count + ")");
 		this.Players = listPlayer.ToArray ();
 		StartCoroutine (RunGame ());
-		EndGame ();
 	}
 
-	public IEnumerator RunGame()
+	private IEnumerator RunGame()
 	{
-		int i;
-
-		if(SceneManager.GetActiveScene().buildIndex != 1)
+		if (SceneManager.GetActiveScene ().buildIndex != 1)
 			yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
-
-		//Players = GameObject.FindObjectsOfType<Player>();
-		Zones 	= new List<Zone>(GameObject.FindObjectsOfType<Zone> ());
-
-		Assert.Check (Settings.Effects.Length != 0, "No effect setted");
-
-		List<ZoneEffect> effects = new List<ZoneEffect> (Settings.Effects);
-		effects.Remove (Settings.Effects [0]);
-
-//		foreach (Zone z in Zones)
-//		{
-//			if (effects.Count == 0)
-//			{
-//				z.Effect = Settings.Effects [0]; // Default effect.
-//			}
-//			else
-//			{
-//				int nEffect = Random.Range (-1, effects.Count);
-//				if (nEffect == -1)
-//				{
-//					z.Effect = Settings.Effects [0]; // Default effect.
-//				}
-//				else
-//				{
-//					z.Effect = effects [nEffect];
-//					effects.Remove (z.Effect);
-//				}
-//			}
-//
-//			for (i = 0; i < z.Effect.NeededLetters; i++)
-//				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
-//
-//			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
-//		}
-
-		foreach (ZoneEffect z in Settings.Effects)
-		{
-			int nZones = Random.Range (0, Zones.Count);
-			Zones [nZones].Effect = z;
-		}
-
-		foreach (Zone z in Zones)
-		{
-			if(z.Effect == null)
-				z.Effect = Settings.Effects [0];
-
-			for (i = 0; i < z.Effect.NeededLetters; i++)
-				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
-			
-			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
-		}
-
-		i = 0;
-		foreach (Player p in Players)
-		{
-			p.color = Settings.PlayerColors [i];
-			p.rigidbody.isKinematic = false;
-			i++;
-		}
+		
+		InitGame ();
 
 		DateTime start = DateTime.Now;
 
@@ -128,25 +68,54 @@ public class Game : MonoBehaviour {
 			foreach (Player p in Players)
 				p.GameUpdate ();
 		}
+
+		EndGame ();
 	}
 
-	public void EndGame()
+	private void InitGame()
 	{
-		List<Player> bestPlayer = new List<Player>();
+		int i;
 
-		bestPlayer.Add (Players [0]);
+		//Players = GameObject.FindObjectsOfType<Player>();
+		Zones = new List<Zone> (GameObject.FindObjectsOfType<Zone> ());
 
-		for (int i = 1; i < Players.Length; i++)
-		{
-			if (Players [i].OwnedZones.Count > bestPlayer [0].OwnedZones.Count)
-			{
-				bestPlayer.Add (Players [i]);
-				bestPlayer.Remove (bestPlayer [0]);
-			}
-			else if (Players [i].OwnedZones.Count == bestPlayer [0].OwnedZones.Count)
-			{
-				bestPlayer.Add (Players [i]);
-			}
+		Assert.Check (Settings.Effects.Length != 0, "No effect setted");
+
+		List<Zone> zonesToSet = new List<Zone> (this.Zones);
+		for (i = 1; i < Settings.Effects.Length && zonesToSet.Count > 0; i++) {
+			int nZones = Random.Range (0, zonesToSet.Count);
+			zonesToSet [nZones].Effect = Settings.Effects [i];
+			zonesToSet.Remove (zonesToSet [nZones]);
 		}
+
+		foreach (Zone z in zonesToSet)
+			z.Effect = Settings.Effects [0];
+
+		foreach (Zone z in Zones) {
+			for (i = 0; i < z.Effect.NeededLetters; i++)
+				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
+
+			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
+		}
+
+		i = 0;
+		foreach (Player p in Players) {
+			p.color = Settings.PlayerColors [i];
+			p.rigidbody.isKinematic = false;
+			i++;
+		}
+	}
+
+	private void EndGame()
+	{
+		Player best = Players [0];
+		for (int i = 1; i < Players.Length; i++)
+			if (Players [i].OwnedZones.Count > best.OwnedZones.Count)
+				best = Players [i];
+
+		List<Player> bestPlayers = new List<Player> ();
+		foreach (Player p in Players)
+			if (p.OwnedZones.Count == best.OwnedZones.Count)
+				bestPlayers.Add (p);
 	}
 }
