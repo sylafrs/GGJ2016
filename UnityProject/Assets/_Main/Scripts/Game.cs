@@ -8,5 +8,9 @@ public class Game : MonoBehaviour {
 	public Player[] Players { get; private set; }
 	public List<Zone> Zones { get; private set; }
 
+	void Update()
+	{
 
+
+	}
 }
