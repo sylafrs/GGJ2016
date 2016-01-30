@@ -9,4 +9,5 @@ public class GameSettings : ScriptableObject {
 	public Player PlayerPrefab;
 	public ZoneEffect[] Effects;
 	public Color [] PlayerColors;
+	public float DurationGame;
 }

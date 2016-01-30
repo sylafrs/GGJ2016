@@ -2,12 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System;
+
+using Random=UnityEngine.Random;
 
 public class Game : MonoBehaviour {
 
 	public static Game Instance { get; private set; }
 	public Player[] Players { get; private set; }
 	public List<Zone> Zones { get; private set; }
+
+	private float actualDuractionGame;
 
 	public GameSettings Settings; 
 
@@ -17,6 +22,8 @@ public class Game : MonoBehaviour {
 		Assert.Check (Instance == null, "Instance already setted");
 		Instance = this;
 		GameObject.DontDestroyOnLoad (this.gameObject);
+
+		actualDuractionGame = Settings.DurationGame;
 	}
 
 	void Start()
@@ -54,16 +61,21 @@ public class Game : MonoBehaviour {
 		List<ZoneEffect> effects = new List<ZoneEffect> (Settings.Effects);
 		effects.Remove (Settings.Effects [0]);
 
-		foreach (Zone z in Zones)
+		foreach (Zone z in Zones) //faire un foreach sur la liste d'objets et l'assigner au zone alléatoirement, et maitre les autre en truc de base
 		{
-			if (effects.Count == 0) {
+			if (effects.Count == 0)
+			{
 				z.Effect = Settings.Effects [0]; // Default effect.
 			}
-			else {
+			else
+			{
 				int nEffect = Random.Range (-1, effects.Count);
-				if (nEffect == -1) {
+				if (nEffect == -1)
+				{
 					z.Effect = Settings.Effects [0]; // Default effect.
-				} else {
+				}
+				else
+				{
 					z.Effect = effects [nEffect];
 					effects.Remove (z.Effect);
 				}
@@ -75,6 +87,8 @@ public class Game : MonoBehaviour {
 			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
 		}
 
+		foreach ()
+
 		i = 0;
 		foreach (Player p in Players) {
 			p.color = Settings.PlayerColors [i];
@@ -82,15 +96,22 @@ public class Game : MonoBehaviour {
 			i++;
 		}
 
-		while (true)
+		DateTime start = DateTime.Now;
+
+		while (actualDuractionGame <= Settings.DurationGame)
 		{
 			yield return null;
+
+			DateTime now = DateTime.Now;
+			actualDuractionGame = (float)(now - start).TotalSeconds;
 
 			foreach (Zone z in Zones)
 				z.GameUpdate ();
 
 			foreach (Player p in Players)
 				p.GameUpdate ();
+
+			Debug.Log (actualDuractionGame);
 		}
 	}
 }
