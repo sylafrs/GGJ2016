@@ -5,4 +5,5 @@ using System.Collections;
 public class GameSettings : ScriptableObject {
 
 	public RectTransform ZoneUIPrefab;
+	public Player PlayerPrefab;
 }

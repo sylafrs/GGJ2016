@@ -36,7 +36,7 @@ public class Zone : MonoBehaviour {
 		Canvas canvas = gCanvas.GetComponent<Canvas> ();
 		Assert.Check (canvas, "CanvasZone's 'Canvas' component is not found");
 
-		ZoneUI.parent = canvas.transform;
+		ZoneUI.SetParent(canvas.transform, false);
 
 		Renderer renderer = this.GetComponent<Renderer> ();
 		Assert.Check (renderer, this.name + "'s 'Renderer' component is not found");
