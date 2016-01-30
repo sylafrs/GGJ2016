@@ -9,13 +9,10 @@ public class ZoneEffectBump : ZoneEffect {
 
 	public override IEnumerator ApplyEffect (Player player)
 	{
-       
-
         foreach (Player otherPlayer in Game.Instance.Players)
         {
             if(otherPlayer != player)
             {
-                Debug.Log("je suis ton pere");
                 Game.Instance.StartCoroutine(Bump(otherPlayer));
             }
         }
@@ -30,6 +27,8 @@ public class ZoneEffectBump : ZoneEffect {
 
     IEnumerator Bump(Player player)
     {
+        iTween.ShakePosition(player.Position.transform.gameObject, Vector3.up, 1);
+
         Vector3 bumpVector = Vector3.up * bumpForce;
         player.rigidbody.AddForce(bumpVector, ForceMode.Impulse);
 
