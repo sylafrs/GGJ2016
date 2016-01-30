@@ -26,7 +26,8 @@ public class Menu : MonoBehaviour
 					Players [(XboxController)i] = player;
 				}
 			} else {
-				if (XCI.GetButton (XboxButton.B, (XboxController)i)) {
+				if (XCI.GetButton (XboxButton.B, (XboxController)i))
+				{
 					GameObject.Destroy (Players [(XboxController)i].gameObject);
 					Players [(XboxController)i] = null;
 				}

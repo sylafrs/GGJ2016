@@ -10,7 +10,11 @@ public class Player : MonoBehaviour
 	public Color color;
 	public float speed;
 
+	public bool isGrounded;
+
 	public XboxController controller;
+
+	public LayerMask LayerMask;
 
 	public new Rigidbody rigidbody { get; private set; }
 
@@ -65,6 +69,14 @@ public class Player : MonoBehaviour
 		Vector3 forceRigid = new Vector3 (input.moveAxis.x, 0, input.moveAxis.y);
 
 		rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
+
+		RaycastHit hit;
+
+		if (Physics.Raycast (transform.position, Vector3.down, 20, LayerMask))
+		{
+			Debug.Log("lol");
+		}
+
 	}
 
 	public void GameUpdate()
