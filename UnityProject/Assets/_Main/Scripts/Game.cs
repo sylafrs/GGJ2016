@@ -47,8 +47,11 @@ public class Game : MonoBehaviour {
 		//Players = GameObject.FindObjectsOfType<Player>();
 		Zones 	= new List<Zone>(GameObject.FindObjectsOfType<Zone> ());
 
+		Assert.Check (Settings.Effects.Length != 0, "No effect setted");
 		foreach (Zone z in Zones)
 		{
+			z.Effect = Settings.Effects [Random.Range (0, Settings.Effects.Length)];
+
 			for (int i = 0; i < z.Effect.NeededLetters; i++)
 				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
 

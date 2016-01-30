@@ -7,4 +7,5 @@ public class GameSettings : ScriptableObject {
 	public RectTransform ZoneUIPrefab;
 	public RectTransform LetterPrefab;
 	public Player PlayerPrefab;
+	public ZoneEffect[] Effects;
 }
