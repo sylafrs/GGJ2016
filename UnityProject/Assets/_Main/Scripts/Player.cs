@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
 
 	public LayerMask LayerMask;
 
+	private Quaternion targetRotation;
+
 	public new Rigidbody rigidbody { get; private set; }
 
 	public List<Zone> OwnedZones { get; private set; }
@@ -72,13 +74,16 @@ public class Player : MonoBehaviour
 	#warning TODO : UpdatePlayer
 	private void UpdatePlayer(PlayerInput input) 
 	{
-		Vector3 forceRigid = new Vector3 (input.moveAxis.x, 0, input.moveAxis.y);
-
 		GameObject bulletReference = null;
 
-		rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
+		Vector3 forceRigid = new Vector3 (input.moveAxis.x, 0, input.moveAxis.y);
+		if (forceRigid != Vector3.zero)
+		{
+			targetRotation = Quaternion.LookRotation (forceRigid, Vector3.up);
+			rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
+		}
 
-		Quaternion targetRotation = Quaternion.LookRotation(forceRigid, Vector3.up);
+
 
 		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 15.0f * Time.deltaTime);
 
