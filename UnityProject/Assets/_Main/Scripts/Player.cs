@@ -47,10 +47,6 @@ public class Player : MonoBehaviour
 	public void OnEnterZone(Zone z)
 	{
 		Position = z;
-
-		#warning Temporary : take over when visiting.
-		/*if(z.CanBeTakenOver)
-			z.OnPlayerTakeOver(this);*/
 	}
 
 	public void OnLeaveZone(Zone z) 
@@ -81,6 +77,12 @@ public class Player : MonoBehaviour
 		GameObject bulletReference = null;
 
 		rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
+
+		Quaternion targetRotation = Quaternion.LookRotation(forceRigid, Vector3.up);
+
+		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 15.0f * Time.deltaTime);
+
+		rigidbody.MoveRotation(newRotation);
 
 		RaycastHit hit;
 
