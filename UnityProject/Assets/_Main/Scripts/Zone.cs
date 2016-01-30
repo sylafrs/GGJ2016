@@ -8,6 +8,8 @@ public class Zone : MonoBehaviour {
 	public Player Owner { get; private set; }
 	private List<Player> Visitors;
 
+	public RectTransform ZoneUI;
+
 	private Queue<KeyCode> Combinaison;
 
 	public bool CanBeTakenOver { get { return Combinaison.Count == 0; } }
@@ -17,6 +19,40 @@ public class Zone : MonoBehaviour {
 		// Can't call Unity functions here.
 		Combinaison = new Queue<KeyCode> ();
 		Visitors 	= new List<Player> ();
+	}
+
+	void Start()
+	{
+		this.PlaceUI ();
+	}
+
+	void PlaceUI()
+	{
+		GameObject gCanvas = GameObject.Find ("CanvasZone");
+		Assert.Check (gCanvas, "CanvasZone gameObject is not found");
+
+		Canvas canvas = gCanvas.GetComponent<Canvas> ();
+		Assert.Check (canvas, "CanvasZone's 'Canvas' component is not found");
+
+		Renderer renderer = this.GetComponent<Renderer> ();
+		Assert.Check (renderer, this.name + "'s 'Renderer' component is not found");
+
+		Bounds b = renderer.bounds;
+		Vector2 screenMin = RectTransformUtility.WorldToScreenPoint (Camera.main, b.min);
+		Vector2 screenMax = RectTransformUtility.WorldToScreenPoint (Camera.main, b.max);
+
+		Vector2 localMin;
+		Vector2 localMax;
+		RectTransformUtility.ScreenPointToLocalPointInRectangle (canvas.transform as RectTransform, screenMin, Camera.main, out localMin);
+		RectTransformUtility.ScreenPointToLocalPointInRectangle (canvas.transform as RectTransform, screenMax, Camera.main, out localMax);
+
+		Rect r = new Rect();
+		r.min = localMin;
+		r.max = localMax;
+
+		ZoneUI.SetSizeWithCurrentAnchors (RectTransform.Axis.Horizontal, r.width);
+		ZoneUI.SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical, r.height);
+		ZoneUI.anchoredPosition = r.center;
 	}
 
 	public void AddKeyToCombinaison(KeyCode c)
