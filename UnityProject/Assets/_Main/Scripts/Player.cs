@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
 			float sqrDistance = (this.transform.position - zone.transform.position).sqrMagnitude;
 
 			if (sqrDistance < sqrDistanceNear) {
-				sqrDistance = sqrDistanceNear;
+				sqrDistanceNear = sqrDistance;
 				near = zone;
 			}
 		}
