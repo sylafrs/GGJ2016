@@ -7,9 +7,10 @@ public class MoveLaser : MonoBehaviour
 	private Vector3 newPosition;
 	
 	// Use this for initialization
-	void Start () 
+	void Start ()
 	{
 		Destroy(gameObject, 1.0f);
+
 	}
 	
 	// Update is called once per frame
@@ -18,10 +19,5 @@ public class MoveLaser : MonoBehaviour
 		newPosition = transform.position;
 		newPosition = transform.position + transform.forward * speed * Time.deltaTime;
 		transform.position = newPosition;
-	}
-
-	void OnTriggerEnter(Collider other)
-	{
-		other.GetComponent<Player> ().DetectBullet ();
 	}
 }

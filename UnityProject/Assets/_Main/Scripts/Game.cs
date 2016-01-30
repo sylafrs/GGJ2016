@@ -44,6 +44,7 @@ public class Game : MonoBehaviour {
 		Assert.Check (listPlayer.Count >= 2, "Not enough players (" + listPlayer.Count + ")");
 		this.Players = listPlayer.ToArray ();
 		StartCoroutine (RunGame ());
+		EndGame ();
 	}
 
 	public IEnumerator RunGame()
@@ -126,6 +127,26 @@ public class Game : MonoBehaviour {
 
 			foreach (Player p in Players)
 				p.GameUpdate ();
+		}
+	}
+
+	public void EndGame()
+	{
+		List<Player> bestPlayer = new List<Player>();
+
+		bestPlayer.Add (Players [0]);
+
+		for (int i = 1; i < Players.Length; i++)
+		{
+			if (Players [i].OwnedZones.Count > bestPlayer [0].OwnedZones.Count)
+			{
+				bestPlayer.Add (Players [i]);
+				bestPlayer.Remove (bestPlayer [0]);
+			}
+			else if (Players [i].OwnedZones.Count == bestPlayer [0].OwnedZones.Count)
+			{
+				bestPlayer.Add (Players [i]);
+			}
 		}
 	}
 }

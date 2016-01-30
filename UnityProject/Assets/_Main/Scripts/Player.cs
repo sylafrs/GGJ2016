@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
 	public Color color;
 	public float speed;
 
+	public float multiplicatorSpeedBullet = 1;
+
 	public GameObject Bullet;
 
 	public bool rightBullet = true;
@@ -80,6 +82,12 @@ public class Player : MonoBehaviour
 		return input;
 	}
 
+	IEnumerator WaitFire(float waitTime)
+	{
+		yield return new WaitForSeconds(waitTime);
+		rightBullet = true;
+	}
+
 	#warning TODO : UpdatePlayer
 	private void UpdatePlayer(PlayerInput input) 
 	{
@@ -101,26 +109,35 @@ public class Player : MonoBehaviour
 			targetRotation = Quaternion.LookRotation (forceRigid, Vector3.up);
 			rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
 
-			Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 15.0f * Time.deltaTime);
-			rigidbody.MoveRotation(newRotation);
+
 		}
+
+		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 15.0f * Time.deltaTime);
+		rigidbody.MoveRotation(newRotation);
 
 		if (input.validateZoneButtonPressed)
 		{
-			if (Position && Position.CanBeTakenOver && Position.Owner != this) {
+			if (Position && Position.CanBeTakenOver && Position.Owner != this)
+			{
 				if (Position.Owner != null)
 					Position.Owner.OnZoneLost (Position);
 				this.OnZoneWon (Position);
 			}
 		}
+
 		if (input.fireButtonPressed && rightBullet)
 		{
-			bulletReference = Instantiate(Bullet, transform.position, Quaternion.identity) as GameObject;
+			bulletReference = Instantiate(Bullet, transform.position, transform.rotation) as GameObject;
+			bulletReference.GetComponent<MoveBullet> ().playerOwner = this.gameObject;
+			bulletReference.GetComponent<MoveBullet> ().multiSpeedBullet = this.multiplicatorSpeedBullet;
+			rightBullet = false;
+			StartCoroutine (WaitFire (0.2f));
 		}
 	}
 
-	public void DetectBullet()
+	public void DetectBullet(Vector3 direction)
 	{
+		rigidbody.AddForce (direction * 10 * multiplicatorSpeedBullet, ForceMode.VelocityChange);
 	}
 
 	private void OnZoneWon(Zone zone)
