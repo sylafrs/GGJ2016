@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
 	public XboxController controller;
 
-	private Rigidbody rigidbody;
+	public new Rigidbody rigidbody { get; private set; }
 
 	public List<Zone> OwnedZones { get; private set; }
 	public List<ZoneEffect> ActiveEffects { get; private set; }

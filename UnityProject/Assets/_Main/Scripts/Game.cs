@@ -11,6 +11,8 @@ public class Game : MonoBehaviour {
 
 	public GameSettings Settings;
 
+    public bool autoStart;
+
 	void Awake()
 	{
 		Assert.Check (Settings, "GameSettings not setted");
@@ -18,6 +20,12 @@ public class Game : MonoBehaviour {
 		Instance = this;
 		GameObject.DontDestroyOnLoad (this.gameObject);
 	}
+
+    void Start()
+    {
+        if (autoStart)
+            StartGame();
+    }
 		
 	public void StartGame()
 	{
