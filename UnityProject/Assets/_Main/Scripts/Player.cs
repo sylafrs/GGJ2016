@@ -4,6 +4,6 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
-	public List<Zone> OwnedZones;
-	public List<ZoneEffect> ActiveEffects;
+	public List<Zone> OwnedZones { get; private set; }
+	public List<ZoneEffect> ActiveEffects { get; private set; }
 }

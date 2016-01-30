@@ -4,6 +4,6 @@ using System.Collections;
 public class Zone : MonoBehaviour {
 
 	public ZoneEffect Effect;
-	public Player Owner;
+	public Player Owner { get; private set; }
 
 }
