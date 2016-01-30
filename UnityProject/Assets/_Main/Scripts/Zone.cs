@@ -78,46 +78,15 @@ public class Zone : MonoBehaviour {
 		foreach (RectTransform rt in Letters)
 			rt.gameObject.SetActive (true);
 	}
-
-	public void OnTriggerEnter(Collider c)
-	{
-		Player p;
-		if (p = c.GetComponent<Player> ()) 
-		{
-			UpdatePlayerZone (p);
-		}
-	}
-
-	private static void UpdatePlayerZone(Player p)
-	{
-		Zone near = Game.Instance.Zones[0];
-		float sqrDistanceNear = (p.transform.position - near.transform.position).sqrMagnitude;
-
-		for (int i = 1; i < Game.Instance.Zones.Count; i++) {
-
-			Zone zone = Game.Instance.Zones [i];
-			float sqrDistance = (p.transform.position - zone.transform.position).sqrMagnitude;
-
-			if (sqrDistance < sqrDistanceNear) {
-				sqrDistance = sqrDistanceNear;
-				near = zone;
-			}
-		}
-
-		if (p.Position != near) {
-			if (p.Position != null) {
-				p.Position.Visitors.Remove (p);
-				p.OnLeaveZone (p.Position);
-			}
-
-			near.Visitors.Add(p);
-			p.OnEnterZone (near);
-		}
-	}
-
-	public void OnTriggerExit(Collider c)
-	{
 		
+	public void OnPlayerEnter(Player p)
+	{
+		this.Visitors.Add (p);
+	}
+
+	public void OnPlayerLeave(Player p)
+	{
+		this.Visitors.Remove (p);
 	}
 
 	public void OnPlayerTakeOver(Player p)

@@ -111,8 +111,37 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	private void UpdateZone()
+	{
+		Zone near = Game.Instance.Zones[0];
+		float sqrDistanceNear = (this.transform.position - near.transform.position).sqrMagnitude;
+
+		for (int i = 1; i < Game.Instance.Zones.Count; i++) {
+
+			Zone zone = Game.Instance.Zones [i];
+			float sqrDistance = (this.transform.position - zone.transform.position).sqrMagnitude;
+
+			if (sqrDistance < sqrDistanceNear) {
+				sqrDistanceNear = sqrDistance;
+				near = zone;
+			}
+		}
+
+		if (this.Position != near) {
+			if (this.Position != null) {
+				this.Position.OnPlayerLeave (this);
+				this.OnLeaveZone (this.Position);
+			}
+
+			near.OnPlayerEnter (this);
+			this.OnEnterZone (near);
+		}
+	}
+
 	public void GameUpdate()
 	{
+		this.UpdateZone ();
+
 		PlayerInput input = ReadInput ();
 
 		foreach (ZoneEffect z in ActiveEffects)
