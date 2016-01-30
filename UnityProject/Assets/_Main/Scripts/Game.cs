@@ -8,6 +8,13 @@ public class Game : MonoBehaviour {
 	public Player[] Players { get; private set; }
 	public List<Zone> Zones { get; private set; }
 
+	void Awake()
+	{
+		Assert.Check (Instance == null, "Instance already setted");
+		Instance = this;
+		GameObject.DontDestroyOnLoad (this.gameObject);
+	}
+
 	void Start()
 	{
 		Players = GameObject.FindObjectsOfType<Player>();
