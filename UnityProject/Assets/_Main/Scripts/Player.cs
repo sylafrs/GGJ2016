@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using XboxCtrlrInput;
+using UnityEngine.Events;
 
 [RequireComponent (typeof (Rigidbody))]
 
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
 
 	public new Rigidbody rigidbody { get; private set; }
 
+	public Zone LastOwnedZone { get; private set; }
 	public List<Zone> OwnedZones { get; private set; }
 	public List<ZoneEffect> ActiveEffects { get; private set; }
 	public Zone Position { get; private set; }
@@ -107,14 +109,20 @@ public class Player : MonoBehaviour
 			if (Position && Position.CanBeTakenOver && Position.Owner != this) {
 				if (Position.Owner != null)
 					Position.Owner.OnZoneLost (Position);
-				Position.OnPlayerTakeOver (this);
-				OwnedZones.Add (Position);
+				this.OnZoneWon (Position);
 			}
 		}
 		if (input.fireButtonPressed)
 		{
 			bulletReference = Instantiate(Bullet, transform.position, Quaternion.identity) as GameObject;
 		}
+	}
+
+	private void OnZoneWon(Zone zone)
+	{
+		LastOwnedZone = zone;
+		zone.OnPlayerTakeOver (this);
+		OwnedZones.Add (zone);
 	}
 
 	private void OnZoneLost(Zone zone)
@@ -146,6 +154,30 @@ public class Player : MonoBehaviour
 
 			near.OnPlayerEnter (this);
 			this.OnEnterZone (near);
+		}
+	}
+
+	public void AddBuff(ZoneEffect effect)
+	{
+		ActiveEffects.Add (effect);
+	}
+
+	public void RemoveBuff(ZoneEffect effect)
+	{
+		ActiveEffects.Remove (effect);
+	}
+
+	public YieldInstruction WaitUntilLastZoneModified()
+	{
+		return Game.Instance.StartCoroutine(WaitUntilLastZoneModifiedEnum());
+	}
+
+	private IEnumerator WaitUntilLastZoneModifiedEnum()
+	{
+		Zone zone = LastOwnedZone;
+		while(LastOwnedZone == zone && LastOwnedZone.Owner == this)
+		{
+			yield return null;
 		}
 	}
 
