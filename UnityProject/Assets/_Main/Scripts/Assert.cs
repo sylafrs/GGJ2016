@@ -16,8 +16,8 @@ public static class Assert  {
 			string stacktrace = System.Environment.StackTrace;
 			string[] lines = stacktrace.Split ('\n');
 			string line = lines [2];
-			string[] words = line.Split (new char []{' '}, StringSplitOptions.RemoveEmptyEntries);
-			throw new AssertionFailedException ("[" + words[1] + "] " + error);
+			int id = line.IndexOf (')');
+			throw new AssertionFailedException ("[" + line.Remove(id + 1).Substring(6) + "] " + error);
 		}
 	}
 }

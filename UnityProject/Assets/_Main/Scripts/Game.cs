@@ -10,7 +10,8 @@ public class Game : MonoBehaviour {
 
 	void Start()
 	{
-		
+		Players = GameObject.FindObjectsOfType<Player>();
+		Zones 	= new List<Zone>(GameObject.FindObjectsOfType<Zone> ());
 	}
 
 	void Update()

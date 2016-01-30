@@ -44,11 +44,13 @@ public class Zone : MonoBehaviour {
 
 	public void OnPlayerTakeOver(Player p)
 	{
-		Assert.Check (!Visitors.Contains (p), "Visitors doesn't contain the player that take over");
+		Assert.Check (Visitors.Contains (p), "Visitors doesn't contain the player that take over");
 		Assert.Check (CanBeTakenOver, "Can't be taken over");
 
 		this.Owner = p;
 		this.Effect.ApplyEffect (p);
+
+		this.SetColor (p.color);
 	}
 
 	public void GameUpdate ()
@@ -59,5 +61,10 @@ public class Zone : MonoBehaviour {
 				Combinaison.Dequeue ();
 			}
 		}
+	}
+
+	public void SetColor(Color c)
+	{
+		this.GetComponent<Renderer> ().material.color = c;
 	}
 }
