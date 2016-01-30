@@ -19,7 +19,7 @@ public class Zone : MonoBehaviour {
 	public Zone() : base()
 	{
 		// Can't call Unity functions here.
-		Combinaison = new Queue<KeyCode> ();
+		Combinaison = new List<KeyCode> ();
 		Visitors 	= new List<Player> ();
 	}
 
