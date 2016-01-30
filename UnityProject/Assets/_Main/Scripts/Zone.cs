@@ -38,10 +38,10 @@ public class Zone : MonoBehaviour {
 
 		ZoneUI.SetParent(canvas.transform, false);
 
-		Renderer renderer = this.GetComponent<Renderer> ();
-		Assert.Check (renderer, this.name + "'s 'Renderer' component is not found");
+		Collider collider = this.GetComponent<Collider> ();
+		Assert.Check (collider, this.name + "'s 'Collider' component is not found");
 
-		Bounds b = renderer.bounds;
+		Bounds b = collider.bounds;
 		Vector2 screenMin = RectTransformUtility.WorldToScreenPoint (Camera.main, b.min);
 		Vector2 screenMax = RectTransformUtility.WorldToScreenPoint (Camera.main, b.max);
 
