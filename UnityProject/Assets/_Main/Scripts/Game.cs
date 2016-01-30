@@ -60,7 +60,7 @@ public class Game : MonoBehaviour {
 
 		while (true)
 		{
-			yield return new WaitForEndOfFrame ();
+			yield return null;
 
 			foreach (Zone z in Zones)
 				z.GameUpdate ();
