@@ -19,11 +19,7 @@ public class Menu : MonoBehaviour
 		{
 			if (Players [(XboxController)i] == null) {
 				if (XCI.GetButton (XboxButton.A, (XboxController)i)) {
-					//Player player = new Player ();
-					Player player = (GameObject.Instantiate(Game.Instance.Settings.PlayerPrefab.gameObject) as GameObject).GetComponent<Player>();
-					player.rigidbody.isKinematic = true;
-					player.controller = (XboxController)i;
-					Players [(XboxController)i] = player;
+					Players [(XboxController)i] = Player.Create((XboxController)i);
 				}
 			} else {
 				if (XCI.GetButton (XboxButton.B, (XboxController)i))

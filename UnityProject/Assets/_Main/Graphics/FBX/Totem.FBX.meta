@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e4eda430de946e64ebbfa395ef7a1b07
-timeCreated: 1454172886
+guid: d8c16d0e515557847ad5ac10cc7e0ca6
+timeCreated: 1454170470
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Hexagone 2
+    4300000: Cylinder001
     9500000: //RootNode
   materials:
     importMaterials: 1

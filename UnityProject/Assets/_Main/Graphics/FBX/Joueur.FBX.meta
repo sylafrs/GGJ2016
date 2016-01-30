@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: e4eda430de946e64ebbfa395ef7a1b07
-timeCreated: 1454172886
+guid: 47c2d214b73be2f408bc2443e0461442
+timeCreated: 1454170468
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,8 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Hexagone 2
+    4300000: Bonhomme
+    7400000: Take 001
     9500000: //RootNode
   materials:
     importMaterials: 1

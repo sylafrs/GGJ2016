@@ -18,6 +18,18 @@ public class Game : MonoBehaviour {
 		Instance = this;
 		GameObject.DontDestroyOnLoad (this.gameObject);
 	}
+
+	void Start()
+	{
+		if(SceneManager.GetActiveScene().buildIndex == 1)
+		{
+			List<Player> players = new List<Player> ();
+			players.Add(Player.Create (XboxCtrlrInput.XboxController.First));
+			players.Add(Player.Create (XboxCtrlrInput.XboxController.Second));
+
+			StartGame (players);
+		}
+	}
 		
 	public void StartGame(List<Player> listPlayer)
 	{
@@ -29,14 +41,18 @@ public class Game : MonoBehaviour {
 
 	public IEnumerator RunGame()
 	{
-		yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
+		if(SceneManager.GetActiveScene().buildIndex != 1)
+			yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
 
 		//Players = GameObject.FindObjectsOfType<Player>();
 		Zones 	= new List<Zone>(GameObject.FindObjectsOfType<Zone> ());
 
 		foreach (Zone z in Zones)
 		{
-			z.PlaceUI (Settings.ZoneUIPrefab);
+			for (int i = 0; i < z.Effect.NeededLetters; i++)
+				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
+
+			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
 		}
 
 		foreach (Player p in Players)

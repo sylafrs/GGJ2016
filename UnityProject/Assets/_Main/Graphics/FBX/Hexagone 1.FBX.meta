@@ -1,19 +1,16 @@
 fileFormatVersion: 2
-guid: 1775823978e54ba4988d5eb616f26f63
-timeCreated: 1454167847
+guid: 9c844e989e2eb7946a1495535017b154
+timeCreated: 1454172886
 licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Hexagone 1
-    100004: Omni001
     400000: //RootNode
-    400002: Hexagone 1
-    400004: Omni001
-    2300000: Hexagone 1
-    3300000: Hexagone 1
+    2300000: //RootNode
+    3300000: //RootNode
     4300000: Hexagone 1
+    7400000: Take 001
     9500000: //RootNode
   materials:
     importMaterials: 1
