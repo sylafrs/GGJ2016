@@ -72,10 +72,12 @@ public class Player : MonoBehaviour
 
 		RaycastHit hit;
 
-		if (Physics.Raycast (transform.position, Vector3.down, 20, LayerMask))
+		if (Physics.Raycast (transform.position, Vector3.down, 100, LayerMask))
 		{
-			Debug.Log("lol");
+			isGrounded = true;
 		}
+		else
+			isGrounded = false;
 
 	}
 
