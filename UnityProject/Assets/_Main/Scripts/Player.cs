@@ -7,6 +7,8 @@ using XboxCtrlrInput;
 
 public class Player : MonoBehaviour
 {
+	const float MAX_DISTANCE_GROUND = 1;
+
 	public Color color;
 	public float speed;
 
@@ -76,7 +78,7 @@ public class Player : MonoBehaviour
 	{
 		GameObject bulletReference = null;
 
-		if (Physics.Raycast (transform.position, Vector3.down, 100, LayerMask))
+		if (Physics.Raycast (transform.position, Vector3.down, MAX_DISTANCE_GROUND, LayerMask))
 		{
 			isGrounded = true;
 		}

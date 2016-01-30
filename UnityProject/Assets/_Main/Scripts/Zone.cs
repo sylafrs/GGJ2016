@@ -87,6 +87,8 @@ public class Zone : MonoBehaviour {
 	public void OnPlayerLeave(Player p)
 	{
 		this.Visitors.Remove (p);
+		if(this.Visitors.Count == 0)
+			this.ResetLetters ();
 	}
 
 	public void OnPlayerTakeOver(Player p)
@@ -98,7 +100,14 @@ public class Zone : MonoBehaviour {
 		Game.Instance.StartCoroutine(this.Effect.ApplyEffect (p));
 
 		this.SetColor (p.color);
+		this.ResetLetters ();
+	}
+
+	public void ResetLetters()
+	{
 		this.CombinaisonStatus = 0;
+		foreach (RectTransform letter in Letters)
+			letter.gameObject.SetActive (true);
 	}
 
 	public void GameUpdate ()
