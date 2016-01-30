@@ -21,7 +21,8 @@ public class Game : MonoBehaviour {
 		
 	public void StartGame(List<Player> listPlayer)
 	{
-		Assert.Check (listPlayer == null || listPlayer.Count < 2, "Not enough players");
+		Assert.Check (listPlayer == null, "Player list is null");
+		Assert.Check (listPlayer.Count < 2, "Not enough players (" + listPlayer.Count + ")");
 		this.Players = listPlayer.ToArray ();
 		StartCoroutine (RunGame ());
 	}
