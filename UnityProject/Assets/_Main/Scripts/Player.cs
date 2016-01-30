@@ -104,13 +104,22 @@ public class Player : MonoBehaviour
 
 		if (input.validateZoneButtonPressed)
 		{
-			if (Position && Position.CanBeTakenOver)
+			if (Position && Position.CanBeTakenOver && Position.Owner != this) {
+				if (Position.Owner != null)
+					Position.Owner.OnZoneLost (Position);
 				Position.OnPlayerTakeOver (this);
+				OwnedZones.Add (Position);
+			}
 		}
 		if (input.fireButtonPressed)
 		{
 			bulletReference = Instantiate(Bullet, transform.position, Quaternion.identity) as GameObject;
 		}
+	}
+
+	private void OnZoneLost(Zone zone)
+	{
+		OwnedZones.Remove (zone);
 	}
 
 	private void UpdateZone()

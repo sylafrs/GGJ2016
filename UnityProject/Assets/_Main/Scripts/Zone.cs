@@ -93,6 +93,7 @@ public class Zone : MonoBehaviour {
 
 	public void OnPlayerTakeOver(Player p)
 	{
+		Assert.Check (Owner != p, "Player already owns the zone");
 		Assert.Check (Visitors.Contains (p), "Visitors doesn't contain the player that take over");
 		Assert.Check (CanBeTakenOver, "Can't be taken over");
 
