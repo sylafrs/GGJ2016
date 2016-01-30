@@ -8,8 +8,7 @@ public class Zone : MonoBehaviour {
 	public Player Owner { get; private set; }
 	private List<Player> Visitors;
 
-	public RectTransform ZoneUI;
-
+	private RectTransform ZoneUI;
 	private Queue<KeyCode> Combinaison;
 
 	public bool CanBeTakenOver { get { return Combinaison.Count == 0; } }
@@ -21,18 +20,23 @@ public class Zone : MonoBehaviour {
 		Visitors 	= new List<Player> ();
 	}
 
-	void Start()
+	public void PlaceUI(RectTransform prefab)
 	{
-		this.PlaceUI ();
-	}
+		Assert.Check (prefab, "Zone UI prefab is null");
 
-	void PlaceUI()
-	{
 		GameObject gCanvas = GameObject.Find ("CanvasZone");
 		Assert.Check (gCanvas, "CanvasZone gameObject is not found");
 
+		GameObject zoneG = GameObject.Instantiate (prefab.gameObject) as GameObject;
+		Assert.Check (zoneG, "Couldn't instantiate zone UI");
+
+		ZoneUI = zoneG.transform as RectTransform;
+		Assert.Check (ZoneUI, "Zone has no RectTransform");
+
 		Canvas canvas = gCanvas.GetComponent<Canvas> ();
 		Assert.Check (canvas, "CanvasZone's 'Canvas' component is not found");
+
+		ZoneUI.parent = canvas.transform;
 
 		Renderer renderer = this.GetComponent<Renderer> ();
 		Assert.Check (renderer, this.name + "'s 'Renderer' component is not found");
