@@ -12,23 +12,20 @@ public class Player : MonoBehaviour
 
 	public Color color;
 	public float speed;
-
 	public GameObject Bullet;
-
 	public bool isGrounded;
 
 	public XboxController controller;
-
-	public LayerMask LayerMask;
+	public LayerMask GroundLayerMask;
 
 	private Quaternion targetRotation;
 
-	public new Rigidbody rigidbody { get; private set; }
+	public new Rigidbody rigidbody 	{ get; private set; }
 
-	public Zone LastOwnedZone { get; private set; }
-	public List<Zone> OwnedZones { get; private set; }
+	public Zone LastOwnedZone 		{ get; private set; }
+	public List<Zone> OwnedZones 	{ get; private set; }
 	public List<ZoneEffect> ActiveEffects { get; private set; }
-	public Zone Position { get; private set; }
+	public Zone Position 			{ get; private set; }
 
 	private void Awake()
 	{
@@ -57,7 +54,7 @@ public class Player : MonoBehaviour
 
 	public void OnLeaveZone(Zone z) 
 	{
-		//Position = null;
+		// Does nothing.
 	}
 
 	private PlayerInput ReadInput() 
@@ -75,12 +72,11 @@ public class Player : MonoBehaviour
 		return input;
 	}
 
-	#warning TODO : UpdatePlayer
 	private void UpdatePlayer(PlayerInput input) 
 	{
 		GameObject bulletReference = null;
 
-		if (Physics.Raycast (transform.position, Vector3.down, MAX_DISTANCE_GROUND, LayerMask))
+		if (Physics.Raycast (transform.position, Vector3.down, MAX_DISTANCE_GROUND, GroundLayerMask))
 		{
 			isGrounded = true;
 		}
