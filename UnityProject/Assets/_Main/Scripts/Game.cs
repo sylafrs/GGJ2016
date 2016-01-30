@@ -61,36 +61,52 @@ public class Game : MonoBehaviour {
 		List<ZoneEffect> effects = new List<ZoneEffect> (Settings.Effects);
 		effects.Remove (Settings.Effects [0]);
 
-		foreach (Zone z in Zones) //faire un foreach sur la liste d'objets et l'assigner au zone alléatoirement, et maitre les autre en truc de base
+//		foreach (Zone z in Zones)
+//		{
+//			if (effects.Count == 0)
+//			{
+//				z.Effect = Settings.Effects [0]; // Default effect.
+//			}
+//			else
+//			{
+//				int nEffect = Random.Range (-1, effects.Count);
+//				if (nEffect == -1)
+//				{
+//					z.Effect = Settings.Effects [0]; // Default effect.
+//				}
+//				else
+//				{
+//					z.Effect = effects [nEffect];
+//					effects.Remove (z.Effect);
+//				}
+//			}
+//
+//			for (i = 0; i < z.Effect.NeededLetters; i++)
+//				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
+//
+//			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
+//		}
+
+		foreach (ZoneEffect z in Settings.Effects)
 		{
-			if (effects.Count == 0)
-			{
-				z.Effect = Settings.Effects [0]; // Default effect.
-			}
-			else
-			{
-				int nEffect = Random.Range (-1, effects.Count);
-				if (nEffect == -1)
-				{
-					z.Effect = Settings.Effects [0]; // Default effect.
-				}
-				else
-				{
-					z.Effect = effects [nEffect];
-					effects.Remove (z.Effect);
-				}
-			}
+			int nZones = Random.Range (0, Zones.Count);
+			Zones [nZones].Effect = z;
+		}
+
+		foreach (Zone z in Zones)
+		{
+			if(z.Effect == null)
+				z.Effect = Settings.Effects [0];
 
 			for (i = 0; i < z.Effect.NeededLetters; i++)
 				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
-
+			
 			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
 		}
 
-		foreach ()
-
 		i = 0;
-		foreach (Player p in Players) {
+		foreach (Player p in Players)
+		{
 			p.color = Settings.PlayerColors [i];
 			p.rigidbody.isKinematic = false;
 			i++;
@@ -110,8 +126,6 @@ public class Game : MonoBehaviour {
 
 			foreach (Player p in Players)
 				p.GameUpdate ();
-
-			Debug.Log (actualDuractionGame);
 		}
 	}
 }

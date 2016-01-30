@@ -95,14 +95,10 @@ public class Player : MonoBehaviour
 		{
 			targetRotation = Quaternion.LookRotation (forceRigid, Vector3.up);
 			rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
+
+			Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 15.0f * Time.deltaTime);
+			rigidbody.MoveRotation(newRotation);
 		}
-
-
-
-		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 15.0f * Time.deltaTime);
-
-		rigidbody.MoveRotation(newRotation);
-
 
 		if (input.validateZoneButtonPressed)
 		{
