@@ -41,6 +41,8 @@ public class Game : MonoBehaviour {
 
 	public IEnumerator RunGame()
 	{
+		int i;
+
 		if(SceneManager.GetActiveScene().buildIndex != 1)
 			yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
 
@@ -67,14 +69,18 @@ public class Game : MonoBehaviour {
 				}
 			}
 
-			for (int i = 0; i < z.Effect.NeededLetters; i++)
+			for (i = 0; i < z.Effect.NeededLetters; i++)
 				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
 
 			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
 		}
 
-		foreach (Player p in Players)
+		i = 0;
+		foreach (Player p in Players) {
+			p.color = Settings.PlayerColors [i];
 			p.rigidbody.isKinematic = false;
+			i++;
+		}
 
 		while (true)
 		{

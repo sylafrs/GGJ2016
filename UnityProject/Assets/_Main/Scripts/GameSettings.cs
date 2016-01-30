@@ -8,4 +8,5 @@ public class GameSettings : ScriptableObject {
 	public RectTransform LetterPrefab;
 	public Player PlayerPrefab;
 	public ZoneEffect[] Effects;
+	public Color [] PlayerColors;
 }
