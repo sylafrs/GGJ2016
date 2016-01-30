@@ -8,14 +8,13 @@ public class ZoneEffectBoost : ZoneEffect {
 
     public override IEnumerator ApplyEffect (Player player)
 	{
-        player.speed = player.speed * boostMultiplier;
-
-		yield break;
+		player.AddBuff (this);
+		yield return player.WaitUntilLastZoneModified();
+		player.RemoveBuff (this);
 	}
 
 	public override void ApplyInputBuff (ref PlayerInput data)
 	{
-		// Does nothing.
+		data.moveAxis *= boostMultiplier;
 	}
-
 }
