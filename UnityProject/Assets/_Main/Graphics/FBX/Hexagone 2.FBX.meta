@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9c844e989e2eb7946a1495535017b154
+guid: 1ff549759ff47f748873c933d3ae5e1d
 timeCreated: 1454172886
 licenseType: Pro
 ModelImporter:
@@ -9,8 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Hexagone 1
-    7400000: Take 001
+    4300000: Hexagone 2
     9500000: //RootNode
   materials:
     importMaterials: 1

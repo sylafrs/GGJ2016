@@ -11,9 +11,10 @@ public class Zone : MonoBehaviour {
 
 	private RectTransform ZoneUI;
 	private List<KeyCode> Combinaison;
+	private List<RectTransform> Letters;
 	private int CombinaisonStatus;
 
-	public Renderer renderer;
+	// public Renderer renderer;
 
 	public bool CanBeTakenOver { get { return CombinaisonStatus >= Combinaison.Count; } }
 
@@ -22,6 +23,7 @@ public class Zone : MonoBehaviour {
 		// Can't call Unity functions here.
 		Combinaison = new List<KeyCode> ();
 		Visitors 	= new List<Player> ();
+		Letters 	= new List<RectTransform> ();
 	}
 
 	public void PlaceUI(RectTransform prefabZone, RectTransform prefabLetter)
@@ -56,6 +58,9 @@ public class Zone : MonoBehaviour {
 			RectTransform letter = letterG.transform as RectTransform;
 			Assert.Check (ZoneUI, "Letter has no RectTransform");
 
+			letter.SetParent (ZoneUI, false);
+			Letters.Add (letter);
+
 			RectTransform txtT = letter.FindChild ("Text") as RectTransform;
 			Assert.Check (txtT, "Letter Text child not found or has no RectTransform");
 
@@ -70,6 +75,8 @@ public class Zone : MonoBehaviour {
 	{
 		Combinaison.Add (c);
 		CombinaisonStatus = 0;
+		foreach (RectTransform rt in Letters)
+			rt.gameObject.SetActive (true);
 	}
 
 	public void OnTriggerEnter(Collider c)
@@ -107,6 +114,7 @@ public class Zone : MonoBehaviour {
 		if (!CanBeTakenOver) {
 			KeyCode next = Combinaison[CombinaisonStatus];
 			if (Input.GetKeyDown (next) && Visitors.Count != 0) {
+				Letters [CombinaisonStatus].gameObject.SetActive (false);
 				CombinaisonStatus++;
 			}
 		}
@@ -114,7 +122,7 @@ public class Zone : MonoBehaviour {
 
 	public void SetColor(Color c)
 	{
-		if(this.renderer)
-			this.renderer.material.color = c;
+		if(this.GetComponent<Renderer> ())
+			this.GetComponent<Renderer> ().material.color = c;
 	}
 }
