@@ -48,9 +48,24 @@ public class Game : MonoBehaviour {
 		Zones 	= new List<Zone>(GameObject.FindObjectsOfType<Zone> ());
 
 		Assert.Check (Settings.Effects.Length != 0, "No effect setted");
+
+		List<ZoneEffect> effects = new List<ZoneEffect> (Settings.Effects);
+		effects.Remove (Settings.Effects [0]);
+
 		foreach (Zone z in Zones)
 		{
-			z.Effect = Settings.Effects [Random.Range (0, Settings.Effects.Length)];
+			if (effects.Count == 0) {
+				z.Effect = Settings.Effects [0]; // Default effect.
+			}
+			else {
+				int nEffect = Random.Range (-1, effects.Count);
+				if (nEffect == -1) {
+					z.Effect = Settings.Effects [0]; // Default effect.
+				} else {
+					z.Effect = effects [nEffect];
+					effects.Remove (z.Effect);
+				}
+			}
 
 			for (int i = 0; i < z.Effect.NeededLetters; i++)
 				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
