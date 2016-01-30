@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
 
-	public static Game Instance;
-	public Player[] Players;
-	public List<Zone> Zones;
+	public static Game Instance { get; private set; }
+	public Player[] Players { get; private set; }
+	public List<Zone> Zones { get; private set; }
 
 
 }
