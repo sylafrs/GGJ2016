@@ -19,4 +19,9 @@ public class MoveLaser : MonoBehaviour
 		newPosition = transform.position + transform.forward * speed * Time.deltaTime;
 		transform.position = newPosition;
 	}
+
+	void OnTriggerEnter(Collider other)
+	{
+		other.GetComponent
+	}
 }

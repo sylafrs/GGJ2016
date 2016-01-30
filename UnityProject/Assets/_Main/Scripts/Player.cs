@@ -10,11 +10,14 @@ public class Player : MonoBehaviour
 {
 	const float MAX_DISTANCE_GROUND = 1;
 
+	//vitesse de la boule float
+
 	public Color color;
 	public float speed;
 
 	public GameObject Bullet;
 
+	public bool rightBullet = true;
 	public bool isGrounded;
 
 	public XboxController controller;
@@ -24,6 +27,8 @@ public class Player : MonoBehaviour
 	private Quaternion targetRotation;
 
 	public new Rigidbody rigidbody { get; private set; }
+
+	public int nbrRoundWin = 0;
 
 	public Zone LastOwnedZone { get; private set; }
 	public List<Zone> OwnedZones { get; private set; }
@@ -108,7 +113,7 @@ public class Player : MonoBehaviour
 				this.OnZoneWon (Position);
 			}
 		}
-		if (input.fireButtonPressed)
+		if (input.fireButtonPressed && rightBullet)
 		{
 			bulletReference = Instantiate(Bullet, transform.position, Quaternion.identity) as GameObject;
 		}
