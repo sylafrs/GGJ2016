@@ -48,7 +48,7 @@ public class Zone : MonoBehaviour {
 		Assert.Check (CanBeTakenOver, "Can't be taken over");
 
 		this.Owner = p;
-		this.Effect.ApplyEffect (p);
+		Game.Instance.StartCoroutine(this.Effect.ApplyEffect (p));
 
 		this.SetColor (p.color);
 	}
