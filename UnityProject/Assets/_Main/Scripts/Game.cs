@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour {
 
@@ -9,7 +10,6 @@ public class Game : MonoBehaviour {
 	public List<Zone> Zones { get; private set; }
 
 	public GameSettings Settings;
-	private bool Playing;
 
 	void Awake()
 	{
@@ -21,18 +21,25 @@ public class Game : MonoBehaviour {
 		
 	public void StartGame()
 	{
+		StartCoroutine (RunGame ());
+	}
+
+	public IEnumerator RunGame()
+	{
+		yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
+
 		Players = GameObject.FindObjectsOfType<Player>();
 		Zones 	= new List<Zone>(GameObject.FindObjectsOfType<Zone> ());
 
-		foreach (Zone z in Zones) {
+		foreach (Zone z in Zones)
+		{
 			z.PlaceUI (Settings.ZoneUIPrefab);
 		}
-	}
 
-	void Update()
-	{
-		if (Playing) 
+		while (true)
 		{
+			yield return new WaitForEndOfFrame ();
+
 			foreach (Zone z in Zones)
 				z.GameUpdate ();
 
