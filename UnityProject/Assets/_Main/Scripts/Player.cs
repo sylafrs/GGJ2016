@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
 	public Color color;
 	public float speed;
 
+	public GameObject Bullet;
+
 	public bool isGrounded;
 
 	public XboxController controller;
@@ -39,13 +41,13 @@ public class Player : MonoBehaviour
 		Position = z;
 
 		#warning Temporary : take over when visiting.
-		if(z.CanBeTakenOver)
-			z.OnPlayerTakeOver(this);
+		/*if(z.CanBeTakenOver)
+			z.OnPlayerTakeOver(this);*/
 	}
 
 	public void OnLeaveZone(Zone z) 
 	{
-		Position = null;
+		//Position = null;
 	}
 
 	private PlayerInput ReadInput() 
@@ -68,6 +70,8 @@ public class Player : MonoBehaviour
 	{
 		Vector3 forceRigid = new Vector3 (input.moveAxis.x, 0, input.moveAxis.y);
 
+		GameObject bulletReference = null;
+
 		rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
 
 		RaycastHit hit;
@@ -79,6 +83,15 @@ public class Player : MonoBehaviour
 		else
 			isGrounded = false;
 
+		if (input.validateZoneButtonPressed)
+		{
+			if (Position && Position.CanBeTakenOver)
+				Position.OnPlayerTakeOver (this);
+		}
+		if (input.fireButtonPressed)
+		{
+			bulletReference = Instantiate(Bullet, transform.position, Quaternion.identity) as GameObject;
+		}
 	}
 
 	public void GameUpdate()
