@@ -2,12 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System;
+
+using Random=UnityEngine.Random;
 
 public class Game : MonoBehaviour {
 
 	public static Game Instance { get; private set; }
 	public Player[] Players { get; private set; }
 	public List<Zone> Zones { get; private set; }
+
+	private float actualDuractionGame;
 
 	public GameSettings Settings; 
 
@@ -17,6 +22,8 @@ public class Game : MonoBehaviour {
 		Assert.Check (Instance == null, "Instance already setted");
 		Instance = this;
 		GameObject.DontDestroyOnLoad (this.gameObject);
+
+		actualDuractionGame = Settings.DurationGame;
 	}
 
 	void Start()
@@ -37,6 +44,7 @@ public class Game : MonoBehaviour {
 		Assert.Check (listPlayer.Count >= 2, "Not enough players (" + listPlayer.Count + ")");
 		this.Players = listPlayer.ToArray ();
 		StartCoroutine (RunGame ());
+		EndGame ();
 	}
 
 	public IEnumerator RunGame()
@@ -54,43 +62,91 @@ public class Game : MonoBehaviour {
 		List<ZoneEffect> effects = new List<ZoneEffect> (Settings.Effects);
 		effects.Remove (Settings.Effects [0]);
 
+//		foreach (Zone z in Zones)
+//		{
+//			if (effects.Count == 0)
+//			{
+//				z.Effect = Settings.Effects [0]; // Default effect.
+//			}
+//			else
+//			{
+//				int nEffect = Random.Range (-1, effects.Count);
+//				if (nEffect == -1)
+//				{
+//					z.Effect = Settings.Effects [0]; // Default effect.
+//				}
+//				else
+//				{
+//					z.Effect = effects [nEffect];
+//					effects.Remove (z.Effect);
+//				}
+//			}
+//
+//			for (i = 0; i < z.Effect.NeededLetters; i++)
+//				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
+//
+//			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
+//		}
+
+		foreach (ZoneEffect z in Settings.Effects)
+		{
+			int nZones = Random.Range (0, Zones.Count);
+			Zones [nZones].Effect = z;
+		}
+
 		foreach (Zone z in Zones)
 		{
-			if (effects.Count == 0) {
-				z.Effect = Settings.Effects [0]; // Default effect.
-			}
-			else {
-				int nEffect = Random.Range (-1, effects.Count);
-				if (nEffect == -1) {
-					z.Effect = Settings.Effects [0]; // Default effect.
-				} else {
-					z.Effect = effects [nEffect];
-					effects.Remove (z.Effect);
-				}
-			}
+			if(z.Effect == null)
+				z.Effect = Settings.Effects [0];
 
 			for (i = 0; i < z.Effect.NeededLetters; i++)
 				z.AddKeyToCombinaison ((KeyCode)(Random.Range ((int)'A', (int)'Z' + 1) - (int)'A' + (int)KeyCode.A));
-
+			
 			z.PlaceUI (Settings.ZoneUIPrefab, Settings.LetterPrefab);
 		}
 
 		i = 0;
-		foreach (Player p in Players) {
+		foreach (Player p in Players)
+		{
 			p.color = Settings.PlayerColors [i];
 			p.rigidbody.isKinematic = false;
 			i++;
 		}
 
-		while (true)
+		DateTime start = DateTime.Now;
+
+		while (actualDuractionGame <= Settings.DurationGame)
 		{
 			yield return null;
+
+			DateTime now = DateTime.Now;
+			actualDuractionGame = (float)(now - start).TotalSeconds;
 
 			foreach (Zone z in Zones)
 				z.GameUpdate ();
 
 			foreach (Player p in Players)
 				p.GameUpdate ();
+		}
+	}
+
+	public void EndGame()
+	{
+		List<Player> bestPlayer = new List<Player>();
+
+		bestPlayer.Add (Players [0]);
+
+		for (int i = 1; i < Players.Length; i++)
+		{
+			if (Players [i].OwnedZones.Count > bestPlayer [0].OwnedZones.Count)
+			{
+				bestPlayer.Add (Players [i]);
+				bestPlayer.Remove (bestPlayer [0]);
+			}
+			else if (Players [i].OwnedZones.Count == bestPlayer [0].OwnedZones.Count)
+			{
+				bestPlayer.Add (Players [i]);
+			}
 		}
 	}
 }
