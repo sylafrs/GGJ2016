@@ -9,14 +9,17 @@ public class Zone : MonoBehaviour {
 	private List<Player> Visitors;
 
 	private RectTransform ZoneUI;
-	private Queue<KeyCode> Combinaison;
+	private List<KeyCode> Combinaison;
+	private int CombinaisonStatus;
 
-	public bool CanBeTakenOver { get { return Combinaison.Count == 0; } }
+	public Renderer renderer;
+
+	public bool CanBeTakenOver { get { return CombinaisonStatus >= Combinaison.Count; } }
 
 	public Zone() : base()
 	{
 		// Can't call Unity functions here.
-		Combinaison = new Queue<KeyCode> ();
+		Combinaison = new List<KeyCode> ();
 		Visitors 	= new List<Player> ();
 	}
 
@@ -38,10 +41,11 @@ public class Zone : MonoBehaviour {
 
 		ZoneUI.SetParent(canvas.transform, false);
 
-		Renderer renderer = this.GetComponent<Renderer> ();
-		Assert.Check (renderer, this.name + "'s 'Renderer' component is not found");
+		Collider collider = this.GetComponent<Collider> ();
+		Assert.Check (collider, this.name + "'s 'Collider' component is not found");
 
-		Bounds b = renderer.bounds;
+
+		Bounds b = collider.bounds;
 		Vector2 screenMin = RectTransformUtility.WorldToScreenPoint (Camera.main, b.min);
 		Vector2 screenMax = RectTransformUtility.WorldToScreenPoint (Camera.main, b.max);
 
@@ -61,7 +65,8 @@ public class Zone : MonoBehaviour {
 
 	public void AddKeyToCombinaison(KeyCode c)
 	{
-		Combinaison.Enqueue (c);
+		Combinaison.Add (c);
+		CombinaisonStatus = 0;
 	}
 
 	public void OnTriggerEnter(Collider c)
@@ -91,20 +96,22 @@ public class Zone : MonoBehaviour {
 		Game.Instance.StartCoroutine(this.Effect.ApplyEffect (p));
 
 		this.SetColor (p.color);
+		this.CombinaisonStatus = 0;
 	}
 
 	public void GameUpdate ()
 	{
 		if (!CanBeTakenOver) {
-			KeyCode next = Combinaison.Peek ();
+			KeyCode next = Combinaison[CombinaisonStatus];
 			if (Input.GetKeyDown (next) && Visitors.Count != 0) {
-				Combinaison.Dequeue ();
+				CombinaisonStatus++;
 			}
 		}
 	}
 
 	public void SetColor(Color c)
 	{
-		this.GetComponent<Renderer> ().material.color = c;
+		if(this.renderer)
+			this.renderer.material.color = c;
 	}
 }
