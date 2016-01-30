@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Zone : MonoBehaviour {
 
@@ -23,14 +24,15 @@ public class Zone : MonoBehaviour {
 		Visitors 	= new List<Player> ();
 	}
 
-	public void PlaceUI(RectTransform prefab)
+	public void PlaceUI(RectTransform prefabZone, RectTransform prefabLetter)
 	{
-		Assert.Check (prefab, "Zone UI prefab is null");
+		Assert.Check (prefabZone, "Zone UI prefab is null");
+		Assert.Check (prefabLetter, "Letter prefab is null");
 
 		GameObject gCanvas = GameObject.Find ("CanvasZone");
 		Assert.Check (gCanvas, "CanvasZone gameObject is not found");
 
-		GameObject zoneG = GameObject.Instantiate (prefab.gameObject) as GameObject;
+		GameObject zoneG = GameObject.Instantiate (prefabZone.gameObject) as GameObject;
 		Assert.Check (zoneG, "Couldn't instantiate zone UI");
 
 		ZoneUI = zoneG.transform as RectTransform;
@@ -41,26 +43,27 @@ public class Zone : MonoBehaviour {
 
 		ZoneUI.SetParent(canvas.transform, false);
 
-		Collider collider = this.GetComponent<Collider> ();
-		Assert.Check (collider, this.name + "'s 'Collider' component is not found");
+		Vector2 local;
+		Vector2 screen = RectTransformUtility.WorldToScreenPoint (Camera.main, this.transform.position);
+		RectTransformUtility.ScreenPointToLocalPointInRectangle (canvas.transform as RectTransform, screen, Camera.main, out local);
+		ZoneUI.anchoredPosition = local;
 
+		for (int i = 0; i < Combinaison.Count; i++) 
+		{
+			GameObject letterG = GameObject.Instantiate (prefabLetter.gameObject) as GameObject;
+			Assert.Check (zoneG, "Couldn't instantiate letter");
 
-		Bounds b = collider.bounds;
-		Vector2 screenMin = RectTransformUtility.WorldToScreenPoint (Camera.main, b.min);
-		Vector2 screenMax = RectTransformUtility.WorldToScreenPoint (Camera.main, b.max);
+			RectTransform letter = letterG.transform as RectTransform;
+			Assert.Check (ZoneUI, "Letter has no RectTransform");
 
-		Vector2 localMin;
-		Vector2 localMax;
-		RectTransformUtility.ScreenPointToLocalPointInRectangle (canvas.transform as RectTransform, screenMin, Camera.main, out localMin);
-		RectTransformUtility.ScreenPointToLocalPointInRectangle (canvas.transform as RectTransform, screenMax, Camera.main, out localMax);
+			RectTransform txtT = letter.FindChild ("Text") as RectTransform;
+			Assert.Check (txtT, "Letter Text child not found or has no RectTransform");
 
-		Rect r = new Rect();
-		r.min = localMin;
-		r.max = localMax;
+			Text txt = txtT.GetComponent<Text> ();
+			Assert.Check (txtT, "Letter Text child's 'Text' component not found");
 
-		ZoneUI.SetSizeWithCurrentAnchors (RectTransform.Axis.Horizontal, r.width);
-		ZoneUI.SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical, r.height);
-		ZoneUI.anchoredPosition = r.center;
+			txt.text = Combinaison [i].ToString();
+		}
 	}
 
 	public void AddKeyToCombinaison(KeyCode c)

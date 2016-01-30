@@ -34,6 +34,14 @@ public class Player : MonoBehaviour
 		ActiveEffects 	= new List<ZoneEffect> ();
 	}
 
+	public static Player Create(XboxController i)
+	{
+		Player player = (GameObject.Instantiate(Game.Instance.Settings.PlayerPrefab.gameObject) as GameObject).GetComponent<Player>();
+		player.rigidbody.isKinematic = true;
+		player.controller = i;
+		return player;
+	}
+
 	public void OnEnterZone(Zone z)
 	{
 		Position = z;
