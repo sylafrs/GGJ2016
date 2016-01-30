@@ -76,6 +76,16 @@ public class Player : MonoBehaviour
 	{
 		GameObject bulletReference = null;
 
+		if (Physics.Raycast (transform.position, Vector3.down, 100, LayerMask))
+		{
+			isGrounded = true;
+		}
+		else
+			isGrounded = false;
+
+		if (!isGrounded)
+			return;
+
 		Vector3 forceRigid = new Vector3 (input.moveAxis.x, 0, input.moveAxis.y);
 		if (forceRigid != Vector3.zero)
 		{
@@ -89,14 +99,6 @@ public class Player : MonoBehaviour
 
 		rigidbody.MoveRotation(newRotation);
 
-		RaycastHit hit;
-
-		if (Physics.Raycast (transform.position, Vector3.down, 100, LayerMask))
-		{
-			isGrounded = true;
-		}
-		else
-			isGrounded = false;
 
 		if (input.validateZoneButtonPressed)
 		{
