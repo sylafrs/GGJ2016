@@ -82,7 +82,10 @@ public class Zone : MonoBehaviour {
 	public void OnTriggerEnter(Collider c)
 	{
 		Player p;
-		if (p = c.GetComponent<Player> ()) {
+		if (p = c.GetComponent<Player> ()) 
+		{
+			if (p.Position != null)
+				p.Position.Visitors.Remove (p);
 			Visitors.Add(p);
 			p.OnEnterZone (this);
 		}
@@ -92,7 +95,7 @@ public class Zone : MonoBehaviour {
 	{
 		Player p;
 		if(p = c.GetComponent<Player>()){
-			Visitors.Remove(p);
+			//Visitors.Remove(p);
 			p.OnLeaveZone (this);
 		}
 	}
@@ -111,7 +114,8 @@ public class Zone : MonoBehaviour {
 
 	public void GameUpdate ()
 	{
-		if (!CanBeTakenOver) {
+		if (!CanBeTakenOver)
+		{
 			KeyCode next = Combinaison[CombinaisonStatus];
 			if (Input.GetKeyDown (next) && Visitors.Count != 0) {
 				Letters [CombinaisonStatus].gameObject.SetActive (false);
