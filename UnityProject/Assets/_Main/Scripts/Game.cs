@@ -8,26 +8,36 @@ public class Game : MonoBehaviour {
 	public Player[] Players { get; private set; }
 	public List<Zone> Zones { get; private set; }
 
+	public GameSettings Settings;
+	private bool Playing;
+
 	void Awake()
 	{
+		Assert.Check (Settings, "GameSettings not setted");
 		Assert.Check (Instance == null, "Instance already setted");
 		Instance = this;
 		GameObject.DontDestroyOnLoad (this.gameObject);
 	}
-
-	void Start()
+		
+	public void StartGame()
 	{
 		Players = GameObject.FindObjectsOfType<Player>();
 		Zones 	= new List<Zone>(GameObject.FindObjectsOfType<Zone> ());
+
+		foreach (Zone z in Zones) {
+			z.PlaceUI (Settings.ZoneUIPrefab);
+		}
 	}
 
 	void Update()
 	{
-		foreach (Zone z in Zones)
-			z.GameUpdate ();
+		if (Playing) 
+		{
+			foreach (Zone z in Zones)
+				z.GameUpdate ();
 
-		foreach (Player p in Players)
-			p.GameUpdate ();
-
+			foreach (Player p in Players)
+				p.GameUpdate ();
+		}
 	}
 }
