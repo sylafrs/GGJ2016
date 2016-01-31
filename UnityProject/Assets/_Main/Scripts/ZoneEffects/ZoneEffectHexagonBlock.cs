@@ -14,9 +14,9 @@ public class ZoneEffectHexagonBlock : ZoneEffect {
 
         List<Zone> possibleZones = new List<Zone>();
 
-		foreach (Zone z in Game.Instance.Zones)
-			if (z.VisitorsCount == 0 && !z.LockTakeOver)
-				possibleZones.Add(z);
+		foreach (Zone z2 in Game.Instance.Zones)
+			if (z2.VisitorsCount == 0 && !z2.LockTakeOver)
+				possibleZones.Add(z2);
 
 		if (possibleZones.Count != 0)
 		{

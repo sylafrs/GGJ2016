@@ -37,10 +37,12 @@ public class Zone : Hexagon {
 	}
 
 	public void OnEffectActivated(){
+        if(this.Picto)
 		this.Picto.color = Color.red;
 	}
 
 	public void OnEffectFinished() {
+        if(this.Picto)
 		this.Picto.color = Color.white;
 	}
 
@@ -135,7 +137,7 @@ public class Zone : Hexagon {
 		Assert.Check (CanBeTakenOver, "Can't be taken over");
 
 		this.Owner = p;
-		Game.Instance.StartCoroutine(this.Effect.ApplyEffect (p));
+		Game.Instance.StartCoroutine(this.Effect.ApplyEffect (this, p));
 
 		this.SetColor (p.colorZones);
 		this.ResetLetters ();

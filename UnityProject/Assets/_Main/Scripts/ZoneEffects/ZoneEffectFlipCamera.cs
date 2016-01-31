@@ -10,7 +10,7 @@ public class ZoneEffectFlipCamera : ZoneEffect
 	{
 		last = player;
 		CameraFlip flipper_le_dauphin = Camera.main.GetComponent<CameraFlip>();
-		Zone z = player.LastOwnedZone;
+		//Zone z = player.LastOwnedZone;
 
 		flipper_le_dauphin.inverse = true;
 		z.OnEffectActivated();
