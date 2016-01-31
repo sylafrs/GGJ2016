@@ -29,6 +29,9 @@ public class MoveBullet : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject != playerOwner && other.tag == "Player")
+		{
 			other.gameObject.GetComponent<Player> ().DetectBullet (transform.forward);
+			Destroy (this.gameObject);
+		}
 	}
 }

@@ -16,7 +16,7 @@ public class Game : MonoBehaviour {
 
 	private float actualDuractionGame;
 
-	public GameSettings Settings; 
+	public GameSettings Settings;
 
 	void Awake()
 	{
