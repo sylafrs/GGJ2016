@@ -12,6 +12,8 @@ public class Game : MonoBehaviour {
 	public Player[] Players { get; private set; }
 	public List<Zone> Zones { get; private set; }
 
+	public AudioSource musicBackground;
+
 	private float actualDuractionGame;
 
 	public GameSettings Settings; 
@@ -27,7 +29,8 @@ public class Game : MonoBehaviour {
 	}
 
 	string gui_remainingTime = "";
-	void OnGUI(){
+	void OnGUI()
+	{
 		GUILayout.Label ("Remaining time = " + gui_remainingTime);
 	}
 
@@ -133,10 +136,14 @@ public class Game : MonoBehaviour {
 		this.InitZoneEffects ();
 		this.InitZoneCombinaisons ();
 		this.InitPlayers ();
+
+		//launch game
 	}
 
 	private void EndGame()
 	{
+		//SON Time's up
+
 		Player best = Players [0];
 		for (int i = 1; i < Players.Length; i++)
 			if (Players [i].OwnedZones.Count > best.OwnedZones.Count)
@@ -144,7 +151,9 @@ public class Game : MonoBehaviour {
 
 		List<Player> bestPlayers = new List<Player> ();
 		foreach (Player p in Players)
-			if (p.OwnedZones.Count == best.OwnedZones.Count)
+			if (p.OwnedZones.Count == best.OwnedZones.Count) {
 				bestPlayers.Add (p);
+				p.nbrRoundWin++;
+			}
 	}
 }
