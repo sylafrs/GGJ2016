@@ -80,6 +80,17 @@ public class Zone : Hexagon {
 		}
 	}
 
+	private void SetLetterColor(RectTransform letter, Color c)
+	{
+		RectTransform txtT = letter.FindChild ("Text") as RectTransform;
+		Assert.Check (txtT, "Letter Text child not found or has no RectTransform");
+
+		Text txt = txtT.GetComponent<Text> ();
+		Assert.Check (txtT, "Letter Text child's 'Text' component not found");
+
+		txt.color = c;
+	}
+
 	public void AddKeyToCombinaison(KeyCode c)
 	{
 		Combinaison.Add (c);
@@ -117,7 +128,7 @@ public class Zone : Hexagon {
 	{
 		this.CombinaisonStatus = 0;
 		foreach (RectTransform letter in Letters)
-			letter.gameObject.SetActive (true);
+			SetLetterColor(letter, Color.black);
 	}
 
 	public void GameUpdate ()
@@ -126,7 +137,7 @@ public class Zone : Hexagon {
 		{
 			KeyCode next = Combinaison[CombinaisonStatus];
 			if (Input.GetKeyDown (next) && Visitors.Count != 0) {
-				Letters [CombinaisonStatus].gameObject.SetActive (false);
+				SetLetterColor(Letters [CombinaisonStatus], Color.red);
 				CombinaisonStatus++;
 			}
 		}
