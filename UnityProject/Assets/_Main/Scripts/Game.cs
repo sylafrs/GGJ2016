@@ -106,8 +106,18 @@ public class Game : MonoBehaviour {
 			}
 
 			EndGame();
-			yield return new WaitForSeconds(3);
+
+			inScoreMenu = true;
+			while (inScoreMenu)
+				yield return null;
 		}
+	}
+
+	public bool inScoreMenu;
+
+	public void ContinueGame()
+	{
+		inScoreMenu = false;
 	}
 
 	private void InitZoneEffects()
@@ -207,10 +217,8 @@ public class Game : MonoBehaviour {
 			if (Players [i].OwnedZones.Count > best.OwnedZones.Count)
 				best = Players [i];
 
-		List<Player> bestPlayers = new List<Player> ();
 		foreach (Player p in Players)
 			if (p.OwnedZones.Count == best.OwnedZones.Count) {
-				bestPlayers.Add (p);
 				p.nbrRoundWin++;
 			}
 	}

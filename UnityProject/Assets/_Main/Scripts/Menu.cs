@@ -13,6 +13,14 @@ public class Menu : MonoBehaviour
 	public Text nbrRound;
 	public Text time;
 
+
+	public Text [] PlayerScore;
+	public Image [] PlayerImage;
+	public Sprite [] PlayerSprite;
+
+	public EndScreen endScreen;
+	public RectTransform inGameScreen;
+
 	public UnityEvent OnGameStart;
 
 	bool WaitingPlayers;
@@ -41,6 +49,8 @@ public class Menu : MonoBehaviour
 				Players [(XboxController)i] = null;
 			}
 
+			PlayerImage[i - 1].enabled = false;
+			PlayerScore[i - 1].enabled = false;
 			Join[i - 1].enabled = true;
 			Ready[i - 1].enabled = false;	
 		}
@@ -57,35 +67,59 @@ public class Menu : MonoBehaviour
 	void Update()
 	{
 		if (WaitingPlayers) {
-			for (int i = 1; i < 5; i++) {
-				if (Players [(XboxController)i] == null) {
-					if (XCI.GetButtonDown (XboxButton.A, (XboxController)i)) {
-						Player p = Player.Create ((XboxController)i);
-						p.gameObject.SetActive (false);
-						Players [(XboxController)i] = p;
+			UpdateWaitingPlayers();
+		}
+		else if (inGame) {
+			UpdateInGame();
+		}
+	}
 
-						Join [i - 1].enabled = false;
-						Ready [i - 1].enabled = true;
-					}
-				} else {
-					if (XCI.GetButtonDown (XboxButton.B, (XboxController)i)) {
-						GameObject.Destroy (Players [(XboxController)i].gameObject);
-						Players [(XboxController)i] = null;
-						Join [i - 1].enabled = true;
-						Ready [i - 1].enabled = false;
-					}
+	void UpdateInGame()
+	{
+		inGameScreen.gameObject.SetActive(!Game.Instance.inScoreMenu);
+		endScreen.gameObject.SetActive(Game.Instance.inScoreMenu);
 
-					if (XCI.GetButtonDown (XboxButton.Start, (XboxController)i)) {
-						if (!gameStarted) {
-							gameStarted = true;
-							StartGame ();
-						}
+		if (nbrRound)
+			nbrRound.text = Game.Instance.nbrRound.ToString();
+	
+		for (int i = 0; i < Game.Instance.Players.Length; i++)
+		{
+			PlayerImage[i].sprite = PlayerSprite[(int)Game.Instance.Players[i].controller - 1];
+			PlayerScore[i].text = Game.Instance.Players[i].OwnedZones.Count.ToString();
+		}
+	}
+
+	void UpdateWaitingPlayers()
+	{
+		for (int i = 1; i < 5; i++) {
+			if (Players [(XboxController)i] == null) {
+				if (XCI.GetButtonDown (XboxButton.A, (XboxController)i)) {
+					Player p = Player.Create ((XboxController)i);
+					p.gameObject.SetActive (false);
+					Players [(XboxController)i] = p;
+
+					Join [i - 1].enabled = false;
+					Ready [i - 1].enabled = true;
+					PlayerImage[i - 1].enabled = true;
+					PlayerScore[i - 1].enabled = true;
+				}
+			} else {
+				if (XCI.GetButtonDown (XboxButton.B, (XboxController)i)) {
+					GameObject.Destroy (Players [(XboxController)i].gameObject);
+					Players [(XboxController)i] = null;
+					Join [i - 1].enabled = true;
+					Ready [i - 1].enabled = false;
+					PlayerImage[i - 1].enabled = false;
+					PlayerScore[i - 1].enabled = false;
+				}
+
+				if (XCI.GetButtonDown (XboxButton.Start, (XboxController)i)) {
+					if (!gameStarted) {
+						gameStarted = true;
+						StartGame ();
 					}
 				}
 			}
-		}
-		else if (inGame) {
-			nbrRound.text = Game.Instance.nbrRound.ToString();
 		}
 	}
 
@@ -102,5 +136,6 @@ public class Menu : MonoBehaviour
 		Game.Instance.StartGame (players);
 		OnGameStart.Invoke();
 		StopWaiting();
+		inGame = true;
 	}
 }

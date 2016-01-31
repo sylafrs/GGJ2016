@@ -220,7 +220,7 @@ public class Player : MonoBehaviour
 	private IEnumerator WaitUntilLastZoneModifiedEnum()
 	{
 		Zone zone = LastOwnedZone;
-		while(LastOwnedZone == zone && LastOwnedZone.Owner == this)
+		while(this && LastOwnedZone && LastOwnedZone == zone && LastOwnedZone.Owner == this)
 		{
 			yield return null;
 		}

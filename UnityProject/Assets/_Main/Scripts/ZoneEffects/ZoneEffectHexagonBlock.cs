@@ -19,8 +19,12 @@ public class ZoneEffectHexagonBlock : ZoneEffect {
 			toBlock.BlockingRock.SetActive(true);
 			toBlock.LockTakeOver = true;
 			yield return player.WaitUntilLastZoneModified();
-			toBlock.BlockingRock.SetActive(false);
-			toBlock.LockTakeOver = false;
+			if (toBlock)
+			{
+				if(toBlock.BlockingRock)
+					toBlock.BlockingRock.SetActive(false);
+				toBlock.LockTakeOver = false;
+			}
 		}
 
 	}
