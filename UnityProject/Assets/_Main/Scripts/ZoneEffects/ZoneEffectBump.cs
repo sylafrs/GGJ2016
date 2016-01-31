@@ -7,7 +7,7 @@ public class ZoneEffectBump : ZoneEffect {
     public float bumpForce;
     public float duration;
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
         foreach (Player otherPlayer in Game.Instance.Players)
         {

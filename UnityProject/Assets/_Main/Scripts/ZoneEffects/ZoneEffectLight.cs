@@ -6,11 +6,11 @@ public class ZoneEffectLight : ZoneEffect {
 
 	#warning TODO : Zone effect light.
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
-		
+		z.OnEffectActivated();
 		yield return player.WaitUntilLastZoneModified();
-
+		z.OnEffectFinished();
 	}
 
 	public override void ApplyInputBuff (ref PlayerInput data)

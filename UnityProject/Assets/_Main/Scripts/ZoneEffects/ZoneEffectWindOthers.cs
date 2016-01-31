@@ -6,13 +6,17 @@ public class ZoneEffectWindOthers : ZoneEffect {
 
 	public Vector3 wind;
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
 		foreach (Player p in Game.Instance.Players)
 			if (p != player)
 				p.WindForce = wind;
 
+		z.OnEffectActivated();
+
 		yield return player.WaitUntilLastZoneModified();
+
+		z.OnEffectFinished();
 
 		foreach (Player p in Game.Instance.Players)
 			if (p != player)

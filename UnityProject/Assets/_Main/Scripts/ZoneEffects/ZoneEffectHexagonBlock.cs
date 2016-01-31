@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [CreateAssetMenu]
 public class ZoneEffectHexagonBlock : ZoneEffect {
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
 		List<Zone> possibleZones = new List<Zone>();
 
@@ -18,7 +18,11 @@ public class ZoneEffectHexagonBlock : ZoneEffect {
 			Zone toBlock = possibleZones[Random.Range(0, possibleZones.Count)];
 			toBlock.BlockingRock.SetActive(true);
 			toBlock.LockTakeOver = true;
+
+			z.OnEffectActivated();
 			yield return player.WaitUntilLastZoneModified();
+			z.OnEffectFinished();
+
 			if (toBlock)
 			{
 				if(toBlock.BlockingRock)
