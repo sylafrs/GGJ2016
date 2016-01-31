@@ -50,8 +50,6 @@ public class Game : MonoBehaviour {
 	{
 		while (true)
 		{
-			InitGame();
-
 			bool mustPause = false;
 			DateTime start = DateTime.Now;
 			actualDuractionGame = 0;
@@ -59,6 +57,10 @@ public class Game : MonoBehaviour {
 			DateTime lastPause;
 			float pauseTime = 0;
 			float timeWhilePause = 0;
+			paused = false;
+			Time.timeScale = 1; 
+
+			InitGame();
 
 			while (actualDuractionGame <= Settings.DurationGame)
 			{
@@ -70,6 +72,7 @@ public class Game : MonoBehaviour {
 					if(!paused)
 						z.GameUpdate();
 
+				mustPause = false;
 				foreach (Player p in Players)
 				{
 					if(!paused)
@@ -77,13 +80,17 @@ public class Game : MonoBehaviour {
 					
 					if (p.AskPause)
 					{
-						paused = !paused;
-						if (paused)
-							lastPause = now;
-						else
-							timeWhilePause += pauseTime;
-						Time.timeScale = paused ? 0 : 1;
+						mustPause = true;
 					}
+				}
+
+				if (mustPause) {
+					paused = !paused;
+					if (paused)
+						lastPause = now;
+					else
+						timeWhilePause += pauseTime;
+					Time.timeScale = paused ? 0 : 1;
 				}
 
 				if (paused)
@@ -169,7 +176,8 @@ public class Game : MonoBehaviour {
 		if (Zones.Contains(z))
 		{
 			Zones.Remove(z);
-			z.Owner.OnZoneLost(z);
+			if(z.Owner)
+				z.Owner.OnZoneLost(z);
 			z.CleanUp();
 			GameObject.Destroy(z.gameObject);
 		}

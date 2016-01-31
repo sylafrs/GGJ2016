@@ -56,7 +56,7 @@ public class Menu : MonoBehaviour
 	bool gameStarted;
 	void Update()
 	{
-		if (!WaitingPlayers) {
+		if (WaitingPlayers) {
 			for (int i = 1; i < 5; i++) {
 				if (Players [(XboxController)i] == null) {
 					if (XCI.GetButtonDown (XboxButton.A, (XboxController)i)) {
