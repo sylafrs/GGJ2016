@@ -6,8 +6,9 @@ public class ZoneEffectBump : ZoneEffect {
 
     public float bumpForce;
     public float duration;
+    public AudioClip bump;
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
         foreach (Player otherPlayer in Game.Instance.Players)
         {
@@ -28,6 +29,9 @@ public class ZoneEffectBump : ZoneEffect {
     IEnumerator Bump(Player player)
     {
         iTween.ShakePosition(player.Position.transform.gameObject, Vector3.up, 1);
+
+        //Play sound
+        Camera.main.GetComponent<AudioSource>().PlayOneShot(bump);
 
         Vector3 bumpVector = Vector3.up * bumpForce;
         player.rigidbody.AddForce(bumpVector, ForceMode.Impulse);

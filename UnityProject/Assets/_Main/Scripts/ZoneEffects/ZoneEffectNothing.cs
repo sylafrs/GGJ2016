@@ -4,7 +4,7 @@ using System.Collections;
 [CreateAssetMenu]
 public class ZoneEffectNothing : ZoneEffect {
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
 		// Does nothing.
 		yield break;

@@ -17,7 +17,7 @@ public class ZoneEffectVibrationOthers : ZoneEffect {
 
 	private bool mustStop;
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
 		mustStop = true;
 		yield return null;
@@ -25,7 +25,11 @@ public class ZoneEffectVibrationOthers : ZoneEffect {
 		foreach (Player p in Game.Instance.Players)
 			if (p != player)
 				Game.Instance.StartCoroutine(Vibrate(p));
+
+		z.OnEffectActivated();
 		yield return player.WaitUntilLastZoneModified();
+		z.OnEffectFinished();
+
 		mustStop = true;
 	}
 
