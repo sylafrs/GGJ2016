@@ -199,6 +199,16 @@ public class Game : MonoBehaviour {
 
 		nbrRound++;
 
+		Player best = Players [0];
+		for (int i = 1; i < Players.Length; i++)
+			if (Players [i].OwnedZones.Count > best.OwnedZones.Count)
+				best = Players [i];
+
+		foreach (Player p in Players)
+			if (p.OwnedZones.Count == best.OwnedZones.Count) {
+				p.nbrRoundWin++;
+			}
+		
 		foreach (Player p in Players)
 		{
 			p.Clear();
@@ -212,14 +222,5 @@ public class Game : MonoBehaviour {
 
 		Zones = null;
 
-		Player best = Players [0];
-		for (int i = 1; i < Players.Length; i++)
-			if (Players [i].OwnedZones.Count > best.OwnedZones.Count)
-				best = Players [i];
-
-		foreach (Player p in Players)
-			if (p.OwnedZones.Count == best.OwnedZones.Count) {
-				p.nbrRoundWin++;
-			}
 	}
 }
