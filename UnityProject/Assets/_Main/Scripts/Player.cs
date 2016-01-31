@@ -21,6 +21,9 @@ public class Player : MonoBehaviour
 	public bool 			isGrounded;
 	public Vector3?			WindForce;
 
+	public AudioClip		SoundControlleZone;
+	public AudioClip		SoundFire;
+
 	public XboxController 	controller;
 
 	public LayerMask 		LayerMask;
@@ -55,8 +58,10 @@ public class Player : MonoBehaviour
 		Player player = (GameObject.Instantiate(Game.Instance.Settings.PlayerPrefabs[(int)i - 1].gameObject) as GameObject).GetComponent<Player>();
 		player.rigidbody.isKinematic = true;
 		MeshRenderer [] renderers = player.GetComponentsInChildren<MeshRenderer>();
-		foreach(MeshRenderer r in renderers)
-			r.material.color = Game.Instance.Settings.PlayerColors [(int)i - 1];
+		foreach (MeshRenderer r in renderers) {
+			if (r.tag != "PasDeCouleur")
+				r.material.color = Game.Instance.Settings.PlayerColors [(int)i - 1];
+		}
 		player.controller = i;
 		return player;
 	}
@@ -139,6 +144,8 @@ public class Player : MonoBehaviour
 			if (Position && Position.CanBeTakenOver && Position.Owner != this)
 			{
 				//SON Prise controlle zone
+				Camera.main.GetComponent<AudioSource>().PlayOneShot(SoundControlleZone);
+
 				if (Position.Owner != null)
 					Position.Owner.OnZoneLost (Position);
 				this.OnZoneWon (Position);
@@ -148,6 +155,9 @@ public class Player : MonoBehaviour
 		if (input.fireButtonPressed && rightBullet)
 		{
 			//SON Tire
+			Camera.main.GetComponent<AudioSource>().PlayOneShot(SoundFire);
+
+
 			animator.SetTrigger("Attack");
 
 			bulletReference = Instantiate(Bullet, transform.position + new Vector3(0, 2, 0), transform.rotation) as GameObject;
@@ -163,6 +173,8 @@ public class Player : MonoBehaviour
 	{
 		animator.SetTrigger("Hit");
 		rigidbody.AddForce (direction * 20 * multiplicatorSpeedBullet, ForceMode.VelocityChange);
+		//SON Tire
+		Camera.main.GetComponent<AudioSource>().PlayOneShot(SoundFire);
 	}
 
 	public void OnZoneWon(Zone zone)
