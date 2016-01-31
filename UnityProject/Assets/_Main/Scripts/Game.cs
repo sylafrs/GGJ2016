@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using System;
 
 using Random=UnityEngine.Random;
+using UnityEngine.Events;
 
 public class Game : MonoBehaviour {
 
@@ -20,6 +21,9 @@ public class Game : MonoBehaviour {
 	private float actualDuractionGame;
 
 	public GameSettings Settings;
+
+	public UnityEvent OnRoundStarted, OnRoundFinished;
+	public UnityEvent OnGameFinished;
 
 	void Awake()
 	{
@@ -46,9 +50,12 @@ public class Game : MonoBehaviour {
 		StartCoroutine (RunGame ());
 	}
 		
+	private bool finished;
+
 	private IEnumerator RunGame()
 	{
-		while (true)
+		finished = false;
+		while (!finished)
 		{
 			bool mustPause = false;
 			DateTime start = DateTime.Now;
@@ -60,6 +67,7 @@ public class Game : MonoBehaviour {
 			paused = false;
 			Time.timeScale = 1; 
 
+			OnRoundStarted.Invoke();
 			InitGame();
 
 			while (actualDuractionGame <= Settings.DurationGame)
@@ -107,10 +115,14 @@ public class Game : MonoBehaviour {
 
 			EndGame();
 
+			OnRoundFinished.Invoke();
+
 			inScoreMenu = true;
 			while (inScoreMenu)
 				yield return null;
 		}
+
+		OnGameFinished.Invoke();
 	}
 
 	public bool inScoreMenu;
@@ -207,6 +219,8 @@ public class Game : MonoBehaviour {
 		foreach (Player p in Players)
 			if (p.OwnedZones.Count == best.OwnedZones.Count) {
 				p.nbrRoundWin++;
+				if (p.nbrRoundWin == 3)
+					finished = true;
 			}
 		
 		foreach (Player p in Players)
