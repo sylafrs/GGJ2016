@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [CreateAssetMenu]
 public class ZoneEffectHexagonDestroy : ZoneEffect {
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
 		List<Zone> possibleZones = new List<Zone>();
 

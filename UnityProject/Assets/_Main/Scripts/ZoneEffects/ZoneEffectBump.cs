@@ -8,7 +8,7 @@ public class ZoneEffectBump : ZoneEffect {
     public float duration;
     public AudioClip bump;
 
-	public override IEnumerator ApplyEffect (Player player)
+	public override IEnumerator ApplyEffect (Zone z, Player player)
 	{
         foreach (Player otherPlayer in Game.Instance.Players)
         {

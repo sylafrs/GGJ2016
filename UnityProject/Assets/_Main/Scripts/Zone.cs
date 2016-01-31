@@ -36,6 +36,14 @@ public class Zone : Hexagon {
 		Letters 	= new List<RectTransform> ();
 	}
 
+	public void OnEffectActivated(){
+		this.Picto.color = Color.red;
+	}
+
+	public void OnEffectFinished() {
+		this.Picto.color = Color.white;
+	}
+
 	public void PlaceUI(RectTransform prefabZone, RectTransform prefabLetter)
 	{
 		Assert.Check (prefabZone, "Zone UI prefab is null");

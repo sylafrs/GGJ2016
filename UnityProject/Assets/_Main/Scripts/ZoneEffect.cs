@@ -8,6 +8,6 @@ public abstract class ZoneEffect : ScriptableObject
 
 	public Sprite Picto;
 
-	public abstract IEnumerator ApplyEffect(Player player);
+	public abstract IEnumerator ApplyEffect(Zone z, Player player);
 	public abstract void ApplyInputBuff(ref PlayerInput data);
 }
