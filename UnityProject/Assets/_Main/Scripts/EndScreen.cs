@@ -41,7 +41,7 @@ public class EndScreen : MonoBehaviour
 
             if(player.nbrRoundWin == 3)
             {
-                Debug.Log("Player in color : " + player.color.ToString() + " has won the Game ! #YOLOSWAAG");
+                Debug.Log("Player in color : " + player.colorZones.ToString() + " has won the Game ! #YOLOSWAAG");
                 banner.GetComponent<Image>().enabled = true;
                 banner.transform.FindChild("Crown").GetComponent<Image>().enabled = true;
             }

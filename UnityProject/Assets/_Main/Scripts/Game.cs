@@ -16,7 +16,7 @@ public class Game : MonoBehaviour {
 
 	private float actualDuractionGame;
 
-	public GameSettings Settings; 
+	public GameSettings Settings;
 
 	void Awake()
 	{
@@ -109,7 +109,7 @@ public class Game : MonoBehaviour {
 		List<Zone> availableZones = new List<Zone> (Zones);
 		foreach (Player p in Players) 
 		{
-			p.color = Settings.PlayerColors [i];
+			p.colorZones = Settings.ZonesColors [i];
 			p.rigidbody.isKinematic = false;
 
 			Zone z = availableZones[Random.Range (0, availableZones.Count)];

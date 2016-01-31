@@ -100,7 +100,7 @@ public class Zone : Hexagon {
 		this.Owner = p;
 		Game.Instance.StartCoroutine(this.Effect.ApplyEffect (p));
 
-		this.SetColor (p.color);
+		this.SetColor (p.colorZones);
 		this.ResetLetters ();
 	}
 
