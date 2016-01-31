@@ -2,7 +2,7 @@
 using System.Collections;
 
 [CreateAssetMenu]
-public class ZoneEffectBoost : ZoneEffect {
+public class ZoneEffectSpeedBoost : ZoneEffect {
 
     public float boostMultiplier;
 
