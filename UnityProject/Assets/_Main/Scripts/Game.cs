@@ -153,6 +153,19 @@ public class Game : MonoBehaviour {
 	{
 		//SON Time's up
 
+		foreach (Player p in Players)
+		{
+			p.Clear();
+		}
+
+		foreach (Zone z in Zones)
+		{
+			z.CleanUp();
+			GameObject.Destroy(z.GameObject);
+		}
+
+		Zones = null;
+
 		Player best = Players [0];
 		for (int i = 1; i < Players.Length; i++)
 			if (Players [i].OwnedZones.Count > best.OwnedZones.Count)

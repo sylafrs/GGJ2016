@@ -218,4 +218,8 @@ public class Player : MonoBehaviour
 
 		this.UpdatePlayer (input);
 	}
+
+	void Clear(){
+
+	}
 }

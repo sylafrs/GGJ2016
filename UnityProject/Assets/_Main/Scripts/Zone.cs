@@ -128,4 +128,21 @@ public class Zone : Hexagon {
 		if(this.GetComponent<Renderer> ())
 			this.GetComponent<Renderer> ().material.color = c;
 	}
+
+	public void Clear()
+	{
+		Owner = null;
+		Effect = null;
+		Visitors.Clear();
+		ZoneUI = null;
+		Combinaison.Clear();
+		CombinaisonStatus = 0;
+		Letters.Clear();
+	}
+
+	public void CleanUp()
+	{
+		GameObject.Destroy(ZoneUI.gameObject);
+		Clear();
+	}
 }
