@@ -122,6 +122,7 @@ public class Game : MonoBehaviour {
 
 	private void InitGame()
 	{
+		this.transform.position = Vector3.zero;
 		this.transform.Translate(-HexagonsCreator.CreateZones(this.transform, Settings.ZonePrefabs, new Vector2(5, 4.3f)));
 
 		//Players = GameObject.FindObjectsOfType<Player>();
