@@ -161,7 +161,7 @@ public class Game : MonoBehaviour {
 		foreach (Zone z in Zones)
 		{
 			z.CleanUp();
-			GameObject.Destroy(z.GameObject);
+			GameObject.Destroy(z.gameObject);
 		}
 
 		Zones = null;
