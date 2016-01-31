@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
 			return;
 
 		Vector3 forceRigid = new Vector3 (input.moveAxis.x, 0, input.moveAxis.y);
-		if (forceRigid != Vector3.zero)
+		if (forceRigid != Vector3.zero && rightBullet)
 		{
 			targetRotation = Quaternion.LookRotation (forceRigid, Vector3.up);
 			rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
