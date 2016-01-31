@@ -56,8 +56,9 @@ public class HexagonsCreator
 			nHexagons++;
 		}
 
-		//Vector3 center = new Vector3 ((creator.xMax - creator.xMin) / 2, 0, (creator.yMax - creator.yMin) / 2);
-		return trio[0].transform.position;
+		Vector3 center = new Vector3 (creator.xMin + (creator.xMax - creator.xMin) / 2, 0, creator.yMin + (creator.yMax - creator.yMin) / 2);
+
+		return center;
 	}
 
     private void PlaceHexagon(Hexagon h)

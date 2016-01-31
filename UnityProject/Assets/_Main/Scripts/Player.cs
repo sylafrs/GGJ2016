@@ -64,6 +64,12 @@ public class Player : MonoBehaviour
 		//Position = null;
 	}
 
+	public bool AskRestart {
+		get {
+			return XCI.GetButtonDown(XboxButton.Start, controller);
+		}
+	}
+
 	private PlayerInput ReadInput() 
 	{
 		PlayerInput input;

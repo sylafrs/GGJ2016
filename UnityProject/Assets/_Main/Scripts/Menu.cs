@@ -13,23 +13,28 @@ public class Menu : MonoBehaviour
 			Players.Add ((XboxController)i, null);
 	}
 
+	bool gameStarted;
 	void Update()
 	{
 		for (int i = 1; i < 5; i++)
 		{
 			if (Players [(XboxController)i] == null) {
-				if (XCI.GetButton (XboxButton.A, (XboxController)i)) {
+				if (XCI.GetButtonDown (XboxButton.A, (XboxController)i)) {
 					Players [(XboxController)i] = Player.Create((XboxController)i);
 				}
 			} else {
-				if (XCI.GetButton (XboxButton.B, (XboxController)i))
+				if (XCI.GetButtonDown (XboxButton.B, (XboxController)i))
 				{
 					GameObject.Destroy (Players [(XboxController)i].gameObject);
 					Players [(XboxController)i] = null;
 				}
 
-				if (XCI.GetButton (XboxButton.Start, (XboxController)i)) {
-					StartGame ();
+				if (XCI.GetButtonDown (XboxButton.Start, (XboxController)i)) {
+					if (!gameStarted)
+					{
+						gameStarted = true;
+						StartGame();
+					}
 				}
 			}
 		}

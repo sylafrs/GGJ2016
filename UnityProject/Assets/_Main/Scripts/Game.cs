@@ -59,27 +59,34 @@ public class Game : MonoBehaviour {
 		if (SceneManager.GetActiveScene ().buildIndex != 1)
 			yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
 
-		this.transform.Translate(-HexagonsCreator.CreateZones(this.transform, Settings.ZonePrefabs, new Vector2(5, 4.3f)));
-		InitGame ();
-
-		DateTime start = DateTime.Now;
-
-		while (actualDuractionGame <= Settings.DurationGame)
+		while (true)
 		{
-			yield return null;
+			InitGame();
 
-			DateTime now = DateTime.Now;
-			actualDuractionGame = (float)(now - start).TotalSeconds;
-			gui_remainingTime = (Settings.DurationGame - actualDuractionGame).ToString("F2");
+			DateTime start = DateTime.Now;
+			actualDuractionGame = 0;
+			while (actualDuractionGame <= Settings.DurationGame)
+			{
+				yield return null;
 
-			foreach (Zone z in Zones)
-				z.GameUpdate ();
+				DateTime now = DateTime.Now;
+				actualDuractionGame = (float)(now - start).TotalSeconds;
+				gui_remainingTime = (Settings.DurationGame - actualDuractionGame).ToString("F2");
 
-			foreach (Player p in Players)
-				p.GameUpdate ();
+				foreach (Zone z in Zones)
+					z.GameUpdate();
+
+				foreach (Player p in Players)
+				{
+					p.GameUpdate();
+					if (p.AskRestart)
+						actualDuractionGame = Settings.DurationGame;
+				}
+			}
+
+			EndGame();
+			yield return new WaitForSeconds(3);
 		}
-
-		EndGame ();
 	}
 
 	private void InitZoneEffects()
@@ -130,6 +137,8 @@ public class Game : MonoBehaviour {
 
 	private void InitGame()
 	{
+		this.transform.Translate(-HexagonsCreator.CreateZones(this.transform, Settings.ZonePrefabs, new Vector2(5, 4.3f)));
+
 		//Players = GameObject.FindObjectsOfType<Player>();
 		Zones = new List<Zone> (GameObject.FindObjectsOfType<Zone> ());
 
