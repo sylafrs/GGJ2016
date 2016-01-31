@@ -15,8 +15,6 @@ public class Menu : MonoBehaviour
 
 
 	public Text [] PlayerScore;
-	public Image [] PlayerImage;
-	public Sprite [] PlayerSprite;
 
 	public EndScreen endScreen;
 	public RectTransform inGameScreen;
@@ -49,7 +47,6 @@ public class Menu : MonoBehaviour
 				Players [(XboxController)i] = null;
 			}
 
-			PlayerImage[i - 1].enabled = false;
 			PlayerScore[i - 1].enabled = false;
 			Join[i - 1].enabled = true;
 			Ready[i - 1].enabled = false;	
@@ -84,7 +81,6 @@ public class Menu : MonoBehaviour
 	
 		for (int i = 0; i < Game.Instance.Players.Length; i++)
 		{
-			PlayerImage[i].sprite = PlayerSprite[(int)Game.Instance.Players[i].controller - 1];
 			PlayerScore[i].text = Game.Instance.Players[i].OwnedZones.Count.ToString();
 		}
 	}
@@ -100,7 +96,6 @@ public class Menu : MonoBehaviour
 
 					Join [i - 1].enabled = false;
 					Ready [i - 1].enabled = true;
-					PlayerImage[i - 1].enabled = true;
 					PlayerScore[i - 1].enabled = true;
 				}
 			} else {
@@ -109,7 +104,6 @@ public class Menu : MonoBehaviour
 					Players [(XboxController)i] = null;
 					Join [i - 1].enabled = true;
 					Ready [i - 1].enabled = false;
-					PlayerImage[i - 1].enabled = false;
 					PlayerScore[i - 1].enabled = false;
 				}
 
