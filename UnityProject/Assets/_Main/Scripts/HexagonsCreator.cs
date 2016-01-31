@@ -2,11 +2,35 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public static class HexagonsCreator 
+public class HexagonsCreator 
 {
+	private Transform root;
+	private Hexagon [] prefabs;
+
+	private int maxCol, maxRow;
+	private Hexagon[,] matrix;
+
+	Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>> stillPossible;
+
+	private HexagonsCreator() {
+		
+	}
+
 	public static void CreateZones(Transform root, Hexagon [] prefabs, float size)
 	{
-		
+		HexagonsCreator creator = new HexagonsCreator();
+		creator.root = root;
+		creator.prefabs = prefabs;
+		creator.hexagonSize = size;
+
+
+		const int N_HEXAGONS = 21;
+		const int MAX_COL = N_HEXAGONS * 2;
+		const int MAX_ROW = N_HEXAGONS * 2;
+
+		creator.maxCol = MAX_COL;
+		creator.maxRow = MAX_ROW;
+
 		// Settings.HexagonsPrefab.
 
 		// 1. Create a trio of hexagons
@@ -15,13 +39,10 @@ public static class HexagonsCreator
 		//	a. Create an hexagon that must have two neighbourgs AND doesn't reach the nLine max / nCol max.
 		//	b. If no hexagon can not be created this way, take another created hexagon.
 
-		const int N_HEXAGONS = 21;
-		const int MAX_COL = N_HEXAGONS * 2;
-		const int MAX_ROW = N_HEXAGONS * 2;
-		Hexagon[,] matrix = new Hexagon[MAX_COL, MAX_ROW];
-		Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>> stillPossible = new Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>>();
+		creator.matrix = new Hexagon[MAX_COL, MAX_ROW];
+		creator.stillPossible = new Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>>();
 
-		CreateTrio(root, prefabs, stillPossible, matrix, MAX_COL, MAX_ROW);
+		creator.CreateTrio();
 
 		Hexagon current;
 		Hexagon.NeighbourgPlace place;
@@ -29,11 +50,11 @@ public static class HexagonsCreator
 		int nHexagons = 3;
 		while (nHexagons < N_HEXAGONS)
 		{
-			if(!TakeRandomHexagonAndPlace(stillPossible, out current, out place))
+			if(!creator.TakeRandomHexagonAndPlace(out current, out place))
 				break;
 			
-			Hexagon newHexagon = CreateRandomZonePrefab(root, prefabs);
-			PlaceRelativeTo(newHexagon, current, place, stillPossible, matrix, MAX_COL, MAX_ROW);
+			Hexagon newHexagon = creator.CreateRandomZonePrefab();
+			creator.PlaceRelativeTo(newHexagon, current, place);
 
 			float x, y;
 
@@ -52,22 +73,19 @@ public static class HexagonsCreator
 
 	}
 
-	private static void CreateTrio(
-		Transform root, Hexagon [] prefabs,
-		Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>> stillPossible, 
-		Hexagon[,] matrix, int maxCol, int maxRow)
+	private void CreateTrio()
 	{
 		Hexagon[] trio = new Hexagon[3]; 
 		for (int i = 0; i < 3; i++)
 		{
-			trio[i] = CreateRandomZonePrefab(root, prefabs);
+			trio[i] = this.CreateRandomZonePrefab();
 		}
 
-		trio[0].nCol = maxCol / 2;
-		trio[0].nRow = maxRow / 2;
-		matrix[trio[0].nCol, trio[0].nRow] = trio[0];
-		PlaceRelativeTo(trio[1], trio[0], Hexagon.NeighbourgPlace.TOP_LEFT, stillPossible, matrix, maxCol, maxRow);
-		PlaceRelativeTo(trio[2], trio[0], Hexagon.NeighbourgPlace.BOT_RIGHT, stillPossible, matrix, maxCol, maxRow);
+		trio[0].nCol = this.maxCol / 2;
+		trio[0].nRow = this.maxRow / 2;
+		this.matrix[trio[0].nCol, trio[0].nRow] = trio[0];
+		this.PlaceRelativeTo(trio[1], trio[0], Hexagon.NeighbourgPlace.TOP_LEFT);
+		this.PlaceRelativeTo(trio[2], trio[0], Hexagon.NeighbourgPlace.BOT_RIGHT);
 	}
 
 	private static void TransformPlace(ref int nCol, ref int nRow, Hexagon.NeighbourgPlace place)
@@ -120,7 +138,7 @@ public static class HexagonsCreator
 		return Hexagon.NeighbourgPlace._NB; // ?
 	}
 
-	private static int CountNeighbourgs(int nCol, int nRow, Hexagon[,] matrix, int maxCol, int maxRow)
+	private int CountNeighbourgs(int nCol, int nRow)
 	{
 		int count = 0;
 
@@ -131,9 +149,9 @@ public static class HexagonsCreator
 
 			TransformPlace(ref newCol, ref newRow, p);
 
-			if (newCol >= 0 && newRow >= 0 && newCol < maxCol && newRow < maxRow)
+			if (newCol >= 0 && newRow >= 0 && newCol < this.maxCol && newRow < this.maxRow)
 			{
-				if(matrix[newCol, newRow] != null)
+				if(this.matrix[newCol, newRow] != null)
 					count++;
 			}
 		}
@@ -141,7 +159,7 @@ public static class HexagonsCreator
 		return count;
 	}
 
-	private static List<Hexagon.NeighbourgPlace> GetPossiblePlaces(Hexagon hexagon, Hexagon[,] matrix, int maxCol, int maxRow)
+	private List<Hexagon.NeighbourgPlace> GetPossiblePlaces(Hexagon hexagon)
 	{
 		List<Hexagon.NeighbourgPlace> possiblePlaces = new List<Hexagon.NeighbourgPlace>();
 
@@ -152,11 +170,11 @@ public static class HexagonsCreator
 
 			TransformPlace(ref nCol, ref nRow, p);
 
-			if (nCol >= 0 && nRow >= 0 && nCol < maxCol && nRow < maxRow)
+			if (nCol >= 0 && nRow >= 0 && nCol < this.maxCol && nRow < this.maxRow)
 			{
-				if (matrix[nCol, nRow] == null)
+				if (this.matrix[nCol, nRow] == null)
 				{
-					int count = CountNeighbourgs(nCol, nRow, matrix, maxCol, maxRow);
+					int count = this.CountNeighbourgs(nCol, nRow);
 					if (count >= 2 && count < 6) // Au moins une place libre !
 					{
 						possiblePlaces.Add(p);
@@ -168,20 +186,18 @@ public static class HexagonsCreator
 		return possiblePlaces;
 	}
 
-	private static bool TakeRandomHexagonAndPlace(
-		Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>> stillPossible,
-		out Hexagon hexagon, out Hexagon.NeighbourgPlace place)
+	private bool TakeRandomHexagonAndPlace(out Hexagon hexagon, out Hexagon.NeighbourgPlace place)
 	{
 		hexagon = null;
 		place = Hexagon.NeighbourgPlace._NB;
 
-		if (stillPossible.Count == 0)
+		if (this.stillPossible.Count == 0)
 			return false;
 
-		int nHex = Random.Range(0, stillPossible.Count);
-		hexagon = new List<Hexagon>(stillPossible.Keys)[nHex];
+		int nHex = Random.Range(0, this.stillPossible.Count);
+		hexagon = new List<Hexagon>(this.stillPossible.Keys)[nHex];
 
-		List<Hexagon.NeighbourgPlace> possiblePlaces = stillPossible[hexagon];
+		List<Hexagon.NeighbourgPlace> possiblePlaces = this.stillPossible[hexagon];
 		Assert.Check(possiblePlaces.Count != 0, "No possible place, but in stillPossible");
 
 		int nPlace = Random.Range(0, possiblePlaces.Count);
@@ -189,10 +205,7 @@ public static class HexagonsCreator
 		return true;
 	}
 
-	private static void SetNeighbourgs(
-		Hexagon hexagon, 
-		Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>> stillPossible, 
-		Hexagon[,] matrix, int maxCol, int maxRow)
+	private void SetNeighbourgs(Hexagon hexagon)
 	{
 		List<Hexagon.NeighbourgPlace> possiblePlaces;
 
@@ -203,7 +216,7 @@ public static class HexagonsCreator
 
 			TransformPlace(ref nCol, ref nRow, p);
 
-			if (nCol >= 0 && nRow >= 0 && nCol < maxCol && nRow < maxRow)
+			if (nCol >= 0 && nRow >= 0 && nCol < this.maxCol && nRow < this.maxRow)
 			{
 				Hexagon neighbourg = matrix[nCol, nRow];
 				if (neighbourg != null)
@@ -211,43 +224,39 @@ public static class HexagonsCreator
 					hexagon.neighbourgs[(int)p] = neighbourg;
 					neighbourg.neighbourgs[(int)Inverse(p)] = hexagon;
 
-					possiblePlaces = GetPossiblePlaces(neighbourg, matrix, maxCol, maxRow);
+					possiblePlaces = this.GetPossiblePlaces(neighbourg);
 
 					if (possiblePlaces.Count == 0)
-						stillPossible.Remove(neighbourg);
+						this.stillPossible.Remove(neighbourg);
 					else
-						stillPossible[neighbourg] = possiblePlaces;
+						this.stillPossible[neighbourg] = possiblePlaces;
 				}
 			}
 		}
 
-		possiblePlaces = GetPossiblePlaces(hexagon, matrix, maxCol, maxRow);
+		possiblePlaces = this.GetPossiblePlaces(hexagon);
 		if (possiblePlaces.Count > 0)
-			stillPossible.Add(hexagon, possiblePlaces);
+			this.stillPossible.Add(hexagon, possiblePlaces);
 	}
 
-	private static bool PlaceRelativeTo(
-		Hexagon toPlace, Hexagon relative, 
-		Hexagon.NeighbourgPlace place, 
-		Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>> stillPossible, 
-		Hexagon [,] matrix, int maxCol, int maxRow)
+	private bool PlaceRelativeTo(Hexagon toPlace, Hexagon relative, Hexagon.NeighbourgPlace place)
 	{
 		int nCol = relative.nCol;
 		int nRow = relative.nRow;
 		TransformPlace(ref nCol, ref nRow, place);
 
-		if (matrix[nCol, nRow] != null)
+		if (this.matrix[nCol, nRow] != null)
 			return false;
 
-		matrix[nCol, nRow] = toPlace;
+		this.matrix[nCol, nRow] = toPlace;
 		toPlace.nCol = nCol;
 		toPlace.nRow = nRow;
 
-		SetNeighbourgs(toPlace, stillPossible, matrix, maxCol, maxRow);
+		this.SetNeighbourgs(toPlace);
 		return true;
 	}
 
-	private static Hexagon CreateRandomZonePrefab(Transform root, Hexagon [] prefabs)
+	private Hexagon CreateRandomZonePrefab()
 	{
 		Assert.Check(prefabs.Length > 0, "No prefab");
 		int n = Random.Range(0, prefabs.Length);
