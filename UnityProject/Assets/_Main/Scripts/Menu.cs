@@ -115,7 +115,6 @@ public class Menu : MonoBehaviour
 
 				if (XCI.GetButtonDown (XboxButton.Start, (XboxController)i)) {
 					if (!gameStarted) {
-						gameStarted = true;
 						StartGame ();
 					}
 				}
@@ -125,7 +124,6 @@ public class Menu : MonoBehaviour
 
 	void StartGame()
 	{
-		Debug.Log ("starting game"); 	
 		List<Player> players = new List<Player> ();
 		foreach (Player p in Players.Values)
 			if (p != null) {
@@ -133,6 +131,12 @@ public class Menu : MonoBehaviour
 				players.Add (p);
 				GameObject.DontDestroyOnLoad (p.gameObject);
 			}
+
+		if (players.Count < 2)
+			return;
+
+		Debug.Log ("starting game"); 	
+		gameStarted = true;
 		Game.Instance.StartGame (players);
 		OnGameStart.Invoke();
 		StopWaiting();
