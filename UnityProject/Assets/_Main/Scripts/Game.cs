@@ -14,6 +14,8 @@ public class Game : MonoBehaviour {
 
 	public AudioSource musicBackground;
 
+	public int nbrRound = 0;
+
 	public static bool paused;
 	private float actualDuractionGame;
 
@@ -176,6 +178,8 @@ public class Game : MonoBehaviour {
 	private void EndGame()
 	{
 		//SON Time's up
+
+		nbrRound++;
 
 		foreach (Player p in Players)
 		{
