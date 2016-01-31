@@ -6,9 +6,13 @@ public class HexagonsCreator
 {
 	private Transform root;
 	private Hexagon [] prefabs;
+    private Vector2 hexagonSize;
 
 	private int maxCol, maxRow;
 	private Hexagon[,] matrix;
+
+	private bool first;
+	private float xMin, yMin, xMax, yMax;
 
 	Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>> stillPossible;
 
@@ -16,13 +20,13 @@ public class HexagonsCreator
 		
 	}
 
-	public static void CreateZones(Transform root, Hexagon [] prefabs, float size)
+	public static Vector3 CreateZones(Transform root, Hexagon [] prefabs, Vector2 size)
 	{
 		HexagonsCreator creator = new HexagonsCreator();
 		creator.root = root;
 		creator.prefabs = prefabs;
-		creator.hexagonSize = size;
-
+        creator.hexagonSize = size;
+		creator.first = true;  	
 
 		const int N_HEXAGONS = 21;
 		const int MAX_COL = N_HEXAGONS * 2;
@@ -31,20 +35,12 @@ public class HexagonsCreator
 		creator.maxCol = MAX_COL;
 		creator.maxRow = MAX_ROW;
 
-		// Settings.HexagonsPrefab.
-
-		// 1. Create a trio of hexagons
-		// 2. Choose one hexagon from the trio to start the loop
-		// [Loop] While the count of hexagons to create is not reached :
-		//	a. Create an hexagon that must have two neighbourgs AND doesn't reach the nLine max / nCol max.
-		//	b. If no hexagon can not be created this way, take another created hexagon.
-
 		creator.matrix = new Hexagon[MAX_COL, MAX_ROW];
 		creator.stillPossible = new Dictionary<Hexagon, List<Hexagon.NeighbourgPlace>>();
 
-		creator.CreateTrio();
-
-		Hexagon current;
+		Hexagon [] trio = creator.CreateTrio();
+       
+        Hexagon current;
 		Hexagon.NeighbourgPlace place;
 
 		int nHexagons = 3;
@@ -55,38 +51,62 @@ public class HexagonsCreator
 			
 			Hexagon newHexagon = creator.CreateRandomZonePrefab();
 			creator.PlaceRelativeTo(newHexagon, current, place);
-
-			float x, y;
-
-			x = newHexagon.nCol * size;
-			y = newHexagon.nRow * size / 2;
-
-			if(newHexagon.nRow % 2 == 0)
-			{
-				x += (size / 2);
-			}
-
-			newHexagon.transform.position = new Vector3(x, 0, y);
-
+            creator.PlaceHexagon(newHexagon);
+			
 			nHexagons++;
 		}
 
+		//Vector3 center = new Vector3 ((creator.xMax - creator.xMin) / 2, 0, (creator.yMax - creator.yMin) / 2);
+		return trio[0].transform.position;
 	}
 
-	private void CreateTrio()
-	{
-		Hexagon[] trio = new Hexagon[3]; 
-		for (int i = 0; i < 3; i++)
-		{
-			trio[i] = this.CreateRandomZonePrefab();
+    private void PlaceHexagon(Hexagon h)
+    {
+        float x, y;
+
+        x = h.nCol * this.hexagonSize.x * 1.5f;
+        y = h.nRow * this.hexagonSize.y ;
+
+		if (first) {
+			xMin = xMax = x;
+			yMin = yMax = y;
+			first = false;
+		} else {
+			if (x < xMin)
+				xMin = x;
+			if (x > xMax)
+				xMax = x;
+			if (y < yMin)
+				yMin = y;
+			if (y > yMax)
+				yMax = y;
 		}
 
-		trio[0].nCol = this.maxCol / 2;
-		trio[0].nRow = this.maxRow / 2;
-		this.matrix[trio[0].nCol, trio[0].nRow] = trio[0];
-		this.PlaceRelativeTo(trio[1], trio[0], Hexagon.NeighbourgPlace.TOP_LEFT);
-		this.PlaceRelativeTo(trio[2], trio[0], Hexagon.NeighbourgPlace.BOT_RIGHT);
-	}
+        h.transform.position = new Vector3(x, 0, y);
+    }
+
+    private Hexagon[] CreateTrio()
+    {
+        Hexagon[] trio = new Hexagon[3];
+        for (int i = 0; i < 3; i++)
+        {
+            trio[i] = this.CreateRandomZonePrefab();
+        }
+
+        trio[0].nCol = this.maxCol / 2;
+        trio[0].nRow = this.maxRow / 2;
+        this.matrix[trio[0].nCol, trio[0].nRow] = trio[0];
+
+        this.PlaceRelativeTo(trio[1], trio[0], Hexagon.NeighbourgPlace.TOP_LEFT);
+        this.PlaceRelativeTo(trio[2], trio[0], Hexagon.NeighbourgPlace.BOT_RIGHT);
+
+        for (int i = 0; i < 3; i++)
+        {
+            this.PlaceHexagon(trio[i]);
+        }
+
+        return trio;
+    }
 
 	private static void TransformPlace(ref int nCol, ref int nRow, Hexagon.NeighbourgPlace place)
 	{
@@ -175,7 +195,7 @@ public class HexagonsCreator
 				if (this.matrix[nCol, nRow] == null)
 				{
 					int count = this.CountNeighbourgs(nCol, nRow);
-					if (count >= 2 && count < 6) // Au moins une place libre !
+					if (count >= 2)
 					{
 						possiblePlaces.Add(p);
 					}

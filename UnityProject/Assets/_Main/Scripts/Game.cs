@@ -59,7 +59,7 @@ public class Game : MonoBehaviour {
 		if (SceneManager.GetActiveScene ().buildIndex != 1)
 			yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
 
-		HexagonsCreator.CreateZones(this.transform, Settings.ZonePrefabs, 9.8f);
+		this.transform.Translate(-HexagonsCreator.CreateZones(this.transform, Settings.ZonePrefabs, new Vector2(5, 4.3f)));
 		InitGame ();
 
 		DateTime start = DateTime.Now;
