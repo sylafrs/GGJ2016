@@ -33,18 +33,6 @@ public class Game : MonoBehaviour {
 	{
 		GUILayout.Label ("Remaining time = " + gui_remainingTime);
 	}
-
-	void Start()
-	{
-		if(SceneManager.GetActiveScene().buildIndex == 1)
-		{
-			List<Player> players = new List<Player> ();
-			players.Add(Player.Create (XboxCtrlrInput.XboxController.First));
-			players.Add(Player.Create (XboxCtrlrInput.XboxController.Second));
-
-			StartGame (players);
-		}
-	}
 		
 	public void StartGame(List<Player> listPlayer)
 	{
@@ -56,9 +44,6 @@ public class Game : MonoBehaviour {
 		
 	private IEnumerator RunGame()
 	{
-		if (SceneManager.GetActiveScene ().buildIndex != 1)
-			yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
-
 		while (true)
 		{
 			InitGame();
