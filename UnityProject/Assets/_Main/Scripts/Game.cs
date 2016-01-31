@@ -14,6 +14,7 @@ public class Game : MonoBehaviour {
 
 	public AudioSource musicBackground;
 
+	public static bool paused;
 	private float actualDuractionGame;
 
 	public GameSettings Settings;
@@ -27,6 +28,7 @@ public class Game : MonoBehaviour {
 
 		actualDuractionGame = Settings.DurationGame;
 	}
+
 
 	string gui_remainingTime = "";
 	void OnGUI()
@@ -48,25 +50,50 @@ public class Game : MonoBehaviour {
 		{
 			InitGame();
 
+			bool mustPause = false;
 			DateTime start = DateTime.Now;
 			actualDuractionGame = 0;
+
+			DateTime lastPause;
+			float pauseTime = 0;
+			float timeWhilePause = 0;
+
 			while (actualDuractionGame <= Settings.DurationGame)
 			{
 				yield return null;
 
 				DateTime now = DateTime.Now;
-				actualDuractionGame = (float)(now - start).TotalSeconds;
-				gui_remainingTime = (Settings.DurationGame - actualDuractionGame).ToString("F2");
 
 				foreach (Zone z in Zones)
-					z.GameUpdate();
+					if(!paused)
+						z.GameUpdate();
 
 				foreach (Player p in Players)
 				{
-					p.GameUpdate();
-					if (p.AskRestart)
-						actualDuractionGame = Settings.DurationGame;
+					if(!paused)
+						p.GameUpdate();
+					
+					if (p.AskPause)
+					{
+						paused = !paused;
+						if (paused)
+							lastPause = now;
+						else
+							timeWhilePause += pauseTime;
+						Time.timeScale = paused ? 0 : 1;
+					}
 				}
+
+				if (paused)
+				{
+					pauseTime = (float)(now - lastPause).TotalSeconds;
+				}
+				else
+				{
+					actualDuractionGame = (float)(now - start).TotalSeconds - timeWhilePause;
+				}
+
+				gui_remainingTime = (Settings.DurationGame - actualDuractionGame).ToString("F2");
 			}
 
 			EndGame();

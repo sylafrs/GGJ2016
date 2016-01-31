@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
 		//Position = null;
 	}
 
-	public bool AskRestart {
+	public bool AskPause {
 		get
 		{
 			return XCI.GetButtonDown(XboxButton.Start, controller);
@@ -110,7 +110,6 @@ public class Player : MonoBehaviour
 	private void UpdatePlayer(PlayerInput input) 
 	{
 		GameObject bulletReference = null;
-
 
 		if (Physics.Raycast (transform.position, Vector3.down, MAX_DISTANCE_GROUND, LayerMask))
 		{
