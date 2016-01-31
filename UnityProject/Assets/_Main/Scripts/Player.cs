@@ -218,8 +218,13 @@ public class Player : MonoBehaviour
 
 		this.UpdatePlayer (input);
 	}
-
-	void Clear(){
-
+		
+	void Clear()
+	{
+		targetRotation = Quaternion.identity;
+		LastOwnedZone = null;
+		OwnedZones.Clear();
+		ActiveEffects.Clear();
+		Position = null;
 	}
 }
