@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
 	private Quaternion 		targetRotation = Quaternion.identity;
 
 	public new Rigidbody 	rigidbody 		{ get; private set; }
+	public new Animator 	animator 		{ get; private set; }
 
 
 	public Zone 			LastOwnedZone 	{ get; private set; }
@@ -37,6 +38,7 @@ public class Player : MonoBehaviour
 	private void Awake()
 	{
 		rigidbody = GetComponent<Rigidbody> ();
+		animator = GetComponentInChildren<Animator> ();
 	}
 
 	public Player() : base() 
@@ -67,7 +69,8 @@ public class Player : MonoBehaviour
 	}
 
 	public bool AskRestart {
-		get {
+		get
+		{
 			return XCI.GetButtonDown(XboxButton.Start, controller);
 		}
 	}
@@ -131,6 +134,7 @@ public class Player : MonoBehaviour
 		if (input.fireButtonPressed && rightBullet)
 		{
 			//SON Tire
+			//animator.SetTrigger("Trun");
 			bulletReference = Instantiate(Bullet, transform.position + new Vector3(0, 2, 0), transform.rotation) as GameObject;
 			bulletReference.GetComponent<MoveBullet> ().playerOwner = this.gameObject;
 			bulletReference.GetComponent<MoveBullet> ().multiSpeedBullet = this.multiplicatorSpeedBullet;
