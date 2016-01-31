@@ -52,6 +52,8 @@ public class EndScreen : MonoBehaviour
     //Instantiate The medal GameObjects
     void InstantiateMedal(int nbMedal, GameObject banner)
     {
+		#warning TODO : Use arrays ;-)
+
         switch (nbMedal)
         {
             case 0:
