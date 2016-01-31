@@ -54,7 +54,9 @@ public class Player : MonoBehaviour
 
 		Player player = (GameObject.Instantiate(Game.Instance.Settings.PlayerPrefabs[(int)i - 1].gameObject) as GameObject).GetComponent<Player>();
 		player.rigidbody.isKinematic = true;
-		player.GetComponentInChildren<MeshRenderer> ().material.color = Game.Instance.Settings.PlayerColors [(int)i - 1];
+		MeshRenderer [] renderers = player.GetComponentsInChildren<MeshRenderer>();
+		foreach(MeshRenderer r in renderers)
+			r.material.color = Game.Instance.Settings.PlayerColors [(int)i - 1];
 		player.controller = i;
 		return player;
 	}

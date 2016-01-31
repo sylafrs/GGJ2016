@@ -10,6 +10,7 @@ public class Zone : Hexagon {
 	private List<Player> 	Visitors;
 
 	private RectTransform 		ZoneUI;
+	private Image				Picto;
 	private List<KeyCode> 		Combinaison;
 	private List<RectTransform> Letters;
 	private int 				CombinaisonStatus;
@@ -48,6 +49,14 @@ public class Zone : Hexagon {
 
 		ZoneUI = zoneG.transform as RectTransform;
 		Assert.Check (ZoneUI, "Zone has no RectTransform");
+
+		RectTransform imgT = zoneG.transform.FindChild("Picto") as RectTransform;
+		Assert.Check (imgT, "Zone has no Picto RectTransform");
+
+		this.Picto = imgT.GetComponent<Image>();
+		Assert.Check(this.Picto, "Picto has no image");
+
+		this.Picto.sprite = this.Effect.Picto;
 
 		Canvas canvas = gCanvas.GetComponent<Canvas> ();
 		Assert.Check (canvas, "CanvasZone's 'Canvas' component is not found");
