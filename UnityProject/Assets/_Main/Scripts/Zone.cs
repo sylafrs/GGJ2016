@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class Zone : MonoBehaviour {
+public class Zone : Hexagon {
 
-	public ZoneEffect Effect;
-	public Player Owner { get; private set; }
-	private List<Player> Visitors;
+	public ZoneEffect 		Effect;
+	public Player 			Owner { get; private set; }
+	private List<Player> 	Visitors;
 
-	private RectTransform ZoneUI;
-	private List<KeyCode> Combinaison;
+	private RectTransform 		ZoneUI;
+	private List<KeyCode> 		Combinaison;
 	private List<RectTransform> Letters;
-	private int CombinaisonStatus;
+	private int 				CombinaisonStatus;
 
 	// public Renderer renderer;
 

@@ -50,12 +50,13 @@ public class Game : MonoBehaviour {
 		this.Players = listPlayer.ToArray ();
 		StartCoroutine (RunGame ());
 	}
-
+		
 	private IEnumerator RunGame()
 	{
 		if (SceneManager.GetActiveScene ().buildIndex != 1)
 			yield return SceneManager.LoadSceneAsync (1, LoadSceneMode.Single);
-		
+
+		HexagonsCreator.CreateZones(this.transform, Settings.ZonePrefabs, 9.8f);
 		InitGame ();
 
 		DateTime start = DateTime.Now;
