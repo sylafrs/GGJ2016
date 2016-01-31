@@ -19,7 +19,7 @@ public class EndScreen : MonoBehaviour
     private Sprite goldMedal;
     //------------------------------------------------------------
 
-    void Start ()
+    void OnEnable ()
     {
         //------------------------------------------------------------
         // Resources Loading
@@ -51,8 +51,10 @@ public class EndScreen : MonoBehaviour
 
     //Instantiate The medal GameObjects
     void InstantiateMedal(int nbMedal, GameObject banner)
-    {
-		#warning TODO : Use arrays ;-)
+	{
+		banner.transform.FindChild("bronzeMedalPos").GetComponent<Image>().enabled = false;
+		banner.transform.FindChild("silverMedalPos").GetComponent<Image>().enabled = false;
+		banner.transform.FindChild("goldMedalPos").GetComponent<Image>().enabled = false;
 
         switch (nbMedal)
         {
