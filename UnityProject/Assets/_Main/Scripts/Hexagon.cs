@@ -14,7 +14,10 @@ public class Hexagon : MonoBehaviour
 		_NB
 	}
 
+	[HideInInspector]
 	public Hexagon [] neighbourgs;
+	[HideInInspector]
 	public int nCol;
+	[HideInInspector]
 	public int nRow;
 }

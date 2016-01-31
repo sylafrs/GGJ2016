@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 	public GameObject 		Bullet;
 	public bool 			rightBullet = true;
 	public bool 			isGrounded;
+	public Vector3?			WindForce;
 
 	public XboxController 	controller;
 
@@ -75,6 +76,16 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public void Vibrate(float leftMotor, float rightMotor)
+	{
+		XInputDotNetPure.GamePad.SetVibration((XInputDotNetPure.PlayerIndex)controller, leftMotor, rightMotor);
+	}
+
+	public void OnDisable()
+	{
+		Vibrate(0, 0);
+	}
+
 	private PlayerInput ReadInput() 
 	{
 		PlayerInput input;
@@ -117,6 +128,9 @@ public class Player : MonoBehaviour
 			rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
 		}
 
+		if(WindForce.HasValue)
+			rigidbody.AddForce(WindForce.Value, ForceMode.Force);
+
 		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 5.0f * Time.deltaTime);
 		rigidbody.MoveRotation(newRotation);
 
@@ -148,14 +162,14 @@ public class Player : MonoBehaviour
 		rigidbody.AddForce (direction * 10 * multiplicatorSpeedBullet, ForceMode.VelocityChange);
 	}
 
-	private void OnZoneWon(Zone zone)
+	public void OnZoneWon(Zone zone)
 	{
 		LastOwnedZone = zone;
 		zone.OnPlayerTakeOver (this);
 		OwnedZones.Add (zone);
 	}
 
-	private void OnZoneLost(Zone zone)
+	public void OnZoneLost(Zone zone)
 	{
 		OwnedZones.Remove (zone);
 	}

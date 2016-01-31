@@ -135,6 +135,17 @@ public class Game : MonoBehaviour {
 		//launch game
 	}
 
+	public void RemoveZone(Zone z)
+	{
+		if (Zones.Contains(z))
+		{
+			Zones.Remove(z);
+			z.Owner.OnZoneLost(z);
+			z.CleanUp();
+			GameObject.Destroy(z.gameObject);
+		}
+	}
+
 	private void EndGame()
 	{
 		//SON Time's up

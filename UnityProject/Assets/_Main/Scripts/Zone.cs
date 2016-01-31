@@ -14,9 +14,18 @@ public class Zone : Hexagon {
 	private List<RectTransform> Letters;
 	private int 				CombinaisonStatus;
 
+	public GameObject BlockingRock;
+	public bool LockTakeOver;
+
+	public int VisitorsCount {
+		get {
+			return Visitors.Count;
+		}
+	}
+
 	// public Renderer renderer;
 
-	public bool CanBeTakenOver { get { return CombinaisonStatus >= Combinaison.Count; } }
+	public bool CanBeTakenOver { get { return CombinaisonStatus >= Combinaison.Count && !LockTakeOver; } }
 
 	public Zone() : base()
 	{
