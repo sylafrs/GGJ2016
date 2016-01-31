@@ -65,8 +65,8 @@ public class Menu : MonoBehaviour
 					p.gameObject.SetActive(false);
 					Players[(XboxController)i] = p;
 
-					Join[i - 1].enabled = true;
-					Ready[i - 1].enabled = false;
+					Join[i - 1].enabled = false;
+					Ready[i - 1].enabled = true;
 				}
 			} 
 			else 
@@ -75,8 +75,8 @@ public class Menu : MonoBehaviour
 				{
 					GameObject.Destroy (Players [(XboxController)i].gameObject);
 					Players [(XboxController)i] = null;
-					Join[i - 1].enabled = false;
-					Ready[i - 1].enabled = true;
+					Join[i - 1].enabled = true;
+					Ready[i - 1].enabled = false;
 				}
 
 				if (XCI.GetButtonDown (XboxButton.Start, (XboxController)i))
