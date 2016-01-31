@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-	const float MAX_DISTANCE_GROUND = 2;
+	const float MAX_DISTANCE_GROUND = 10;
 
 	//vitesse de la boule float
 
@@ -111,13 +111,7 @@ public class Player : MonoBehaviour
 	{
 		GameObject bulletReference = null;
 
-		if (Physics.Raycast (transform.position, Vector3.down, MAX_DISTANCE_GROUND, LayerMask))
-		{
-			isGrounded = true;
-		}
-		else
-			isGrounded = false;
-
+		isGrounded = Physics.Raycast (transform.position + Vector3.up, Vector3.down, MAX_DISTANCE_GROUND, LayerMask);
 		if (!isGrounded)
 			return;
 
