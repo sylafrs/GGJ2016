@@ -8,7 +8,7 @@ using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-	const float MAX_DISTANCE_GROUND = 1;
+	const float MAX_DISTANCE_GROUND = 2;
 
 	//vitesse de la boule float
 
@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
 
 		Player player = (GameObject.Instantiate(Game.Instance.Settings.PlayerPrefab.gameObject) as GameObject).GetComponent<Player>();
 		player.rigidbody.isKinematic = true;
-		player.GetComponentInChildren<MeshRenderer> ().material.color = Game.Instance.Settings.PlayerColors [(int)i];
+		player.GetComponentInChildren<MeshRenderer> ().material.color = Game.Instance.Settings.PlayerColors [(int)i - 1];
 		player.controller = i;
 		return player;
 	}
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
 		Vibrate(0, 0);
 	}
 
-	private PlayerInput ReadInput() 
+	private PlayerInput ReadInput()
 	{
 		PlayerInput input;
 
@@ -111,6 +111,7 @@ public class Player : MonoBehaviour
 	{
 		GameObject bulletReference = null;
 
+
 		if (Physics.Raycast (transform.position, Vector3.down, MAX_DISTANCE_GROUND, LayerMask))
 		{
 			isGrounded = true;
@@ -122,11 +123,15 @@ public class Player : MonoBehaviour
 			return;
 
 		Vector3 forceRigid = new Vector3 (input.moveAxis.x, 0, input.moveAxis.y);
-		if (forceRigid != Vector3.zero)
+		if (forceRigid != Vector3.zero && rightBullet)
 		{
 			targetRotation = Quaternion.LookRotation (forceRigid, Vector3.up);
 			rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
+
+			animator.SetFloat ("Move", 1);
 		}
+		else
+			animator.SetFloat ("Move", 0);
 
 		if(WindForce.HasValue)
 			rigidbody.AddForce(WindForce.Value, ForceMode.Force);
@@ -148,18 +153,21 @@ public class Player : MonoBehaviour
 		if (input.fireButtonPressed && rightBullet)
 		{
 			//SON Tire
-			animator.SetTrigger("Turn");
+			animator.SetTrigger("Attack");
+
 			bulletReference = Instantiate(Bullet, transform.position + new Vector3(0, 2, 0), transform.rotation) as GameObject;
 			bulletReference.GetComponent<MoveBullet> ().playerOwner = this.gameObject;
 			bulletReference.GetComponent<MoveBullet> ().multiSpeedBullet = this.multiplicatorSpeedBullet;
+
 			rightBullet = false;
-			StartCoroutine (WaitFire (0.2f));
+			StartCoroutine (WaitFire (1.0f));
 		}
 	}
 
 	public void DetectBullet(Vector3 direction)
 	{
-		rigidbody.AddForce (direction * 10 * multiplicatorSpeedBullet, ForceMode.VelocityChange);
+		animator.SetTrigger("Hit");
+		rigidbody.AddForce (direction * 20 * multiplicatorSpeedBullet, ForceMode.VelocityChange);
 	}
 
 	public void OnZoneWon(Zone zone)
