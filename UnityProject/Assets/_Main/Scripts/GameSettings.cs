@@ -8,6 +8,7 @@ public class GameSettings : ScriptableObject {
 	public RectTransform 	LetterPrefab;
 	public Player 			PlayerPrefab;
 	public ZoneEffect[] 	Effects;
+	public Color [] 		ZonesColors;
 	public Color [] 		PlayerColors;
 	public float 			DurationGame;
 	public Zone []			ZonePrefabs;

@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
 	//vitesse de la boule float
 
-	public Color 			color;
+	public Color 			colorZones;
 	public float 			speed;
 	public float 			multiplicatorSpeedBullet = 1;
 	public int 				nbrRoundWin = 0;
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
 
 	public LayerMask 		LayerMask;
 
-	private Quaternion 		targetRotation;
+	private Quaternion 		targetRotation = Quaternion.identity;
 
 	public new Rigidbody 	rigidbody 		{ get; private set; }
 
@@ -48,8 +48,10 @@ public class Player : MonoBehaviour
 
 	public static Player Create(XboxController i)
 	{
+
 		Player player = (GameObject.Instantiate(Game.Instance.Settings.PlayerPrefab.gameObject) as GameObject).GetComponent<Player>();
 		player.rigidbody.isKinematic = true;
+		player.GetComponentInChildren<MeshRenderer> ().material.color = Game.Instance.Settings.PlayerColors [(int)i];
 		player.controller = i;
 		return player;
 	}
@@ -110,11 +112,9 @@ public class Player : MonoBehaviour
 		{
 			targetRotation = Quaternion.LookRotation (forceRigid, Vector3.up);
 			rigidbody.AddForce (forceRigid * speed, ForceMode.VelocityChange);
-
-
 		}
 
-		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 15.0f * Time.deltaTime);
+		Quaternion newRotation = Quaternion.Lerp(rigidbody.rotation, targetRotation, 5.0f * Time.deltaTime);
 		rigidbody.MoveRotation(newRotation);
 
 		if (input.validateZoneButtonPressed)
