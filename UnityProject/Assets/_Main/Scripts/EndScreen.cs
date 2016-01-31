@@ -27,6 +27,7 @@ public class EndScreen : MonoBehaviour
 			banner[i].transform.FindChild("bronzeMedalPos").GetComponent<Image>().enabled = false;
 			banner[i].transform.FindChild("silverMedalPos").GetComponent<Image>().enabled = false;
 			banner[i].transform.FindChild("goldMedalPos")	.GetComponent<Image>().enabled = false;
+			banner[i].transform.FindChild("Cache")	.GetComponent<Image>().enabled = true;
 		}
 
         for (int i = 0; i < Game.Instance.Players.Length; i++)
@@ -48,6 +49,7 @@ public class EndScreen : MonoBehaviour
     //Instantiate The medal GameObjects
     void InstantiateMedal(int nbMedal, GameObject banner)
 	{
+		banner.transform.FindChild("Cache")	.GetComponent<Image>().enabled = false;
         switch (nbMedal)
         {
             case 0:
