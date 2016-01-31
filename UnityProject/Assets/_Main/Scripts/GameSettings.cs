@@ -6,7 +6,7 @@ public class GameSettings : ScriptableObject {
 
 	public RectTransform 	ZoneUIPrefab;
 	public RectTransform 	LetterPrefab;
-	public Player 			PlayerPrefab;
+	public Player[]			PlayerPrefabs;
 	public ZoneEffect[] 	Effects;
 	public Color [] 		ZonesColors;
 	public Color [] 		PlayerColors;

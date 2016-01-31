@@ -1,15 +1,40 @@
 fileFormatVersion: 2
-guid: 573bcc34602691f49a4fa2ba001cc74b
-timeCreated: 1454231696
-licenseType: Free
+guid: 019b171161162724580b870d18199d72
+timeCreated: 1454248357
+licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
+    100000: bras droit
+    100002: bras gauche
+    100004: Jambe droite
+    100006: Jambe gauche
+    100008: //RootNode
+    100010: "T\xEAte"
+    400000: bras droit
+    400002: bras gauche
+    400004: Jambe droite
+    400006: Jambe gauche
+    400008: //RootNode
+    400010: "T\xEAte"
+    2300000: bras droit
+    2300002: bras gauche
+    2300004: Jambe droite
+    2300006: Jambe gauche
+    2300008: //RootNode
+    2300010: "T\xEAte"
+    3300000: bras droit
+    3300002: bras gauche
+    3300004: Jambe droite
+    3300006: Jambe gauche
+    3300008: //RootNode
+    3300010: "T\xEAte"
     4300000: Bonhomme
+    4300002: "T\xEAte"
+    4300004: Jambe droite
+    4300006: Jambe gauche
+    4300008: bras gauche
+    4300010: bras droit
     7400000: Take 001
     9500000: //RootNode
   materials:
