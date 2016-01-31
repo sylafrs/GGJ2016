@@ -4,9 +4,13 @@ using System.Collections;
 [CreateAssetMenu]
 public class ZoneEffectShootStop : ZoneEffect {
 
+    public AudioClip clip;
+
 	public override IEnumerator ApplyEffect (Player player)
 	{
-		foreach(Player p in Game.Instance.Players)
+        Camera.main.GetComponent<AudioSource>().PlayOneShot(clip);
+
+        foreach (Player p in Game.Instance.Players)
 			if(p != player)
 				player.AddBuff (this);
 

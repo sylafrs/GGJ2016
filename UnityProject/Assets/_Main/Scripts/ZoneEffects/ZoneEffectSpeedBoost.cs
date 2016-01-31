@@ -5,10 +5,13 @@ using System.Collections;
 public class ZoneEffectSpeedBoost : ZoneEffect {
 
     public float boostMultiplier;
+    public AudioClip clip;
 
     public override IEnumerator ApplyEffect (Player player)
 	{
-		player.AddBuff (this);
+        Camera.main.GetComponent<AudioSource>().PlayOneShot(clip);
+
+        player.AddBuff (this);
 		yield return player.WaitUntilLastZoneModified();
 		player.RemoveBuff (this);
 	}
